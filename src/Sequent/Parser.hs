@@ -34,12 +34,17 @@ parse_prefix toks = do
 parse_commalist :: [Token] -> Either String ([Token], [Sequent.Exp])
 parse_commalist [] = Right ([], [])
 parse_commalist all@(Turnstyle:_) = Right (all, [])
-parse_commalist toks = case (parse_exp toks) of
-                            Left l -> Left l
-                            Right (Comma:toks', exp) -> case (parse_commalist toks') of
-                                                            Left l -> Left l
-                                                            Right (toks'', exp') -> Right (toks'', (exp:exp'))
-                            Right (toks, exp) -> Right (toks, [exp])
+parse_commalist toks = do
+    (toks, exp) <- parse_exp toks
+    (toks, exps) <- (more toks) <> (end toks)
+    return (toks, (exp:exps))
+    where more :: [Token] -> Either String ([Token], [Sequent.Exp])
+          more toks = do
+            toks <- consume_token Comma toks
+            (toks, exps) <- parse_commalist toks
+            return (toks, exps)
+          end :: [Token] -> Either String ([Token], [Sequent.Exp])
+          end toks = Right (toks, [])
 
 parse_exp :: [Token] -> Either String ([Token], Sequent.Exp)
 parse_exp (LParen:toks) = do
