@@ -1,4 +1,4 @@
-module Proof.Run2
+module Proof.Run
 (
     run,
     run',

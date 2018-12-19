@@ -1,4 +1,4 @@
-module Proof.Run2Spec
+module Proof.RunSpec
 (
     main,
     spec,
@@ -13,7 +13,7 @@ import qualified Proof.Data.Theorem as Theorem
 import qualified Data.Map.Strict as Map
 import qualified Data.Set as Set
 import System.Data.System
-import Proof.Run2
+import Proof.Run
 
 spec :: Spec
 spec = do
