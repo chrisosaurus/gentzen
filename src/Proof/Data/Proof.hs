@@ -56,13 +56,13 @@ instance Show Proof where
 showSeqs  :: [(ID, Sequent)] -> String
 showSeqs [] = ""
 showSeqs ((id, seq):xs) = this ++ rest
-    where this = "\n\t\t" ++ (show id) ++ ":" ++ (show seq)
+    where this = "\n\t\t" ++ (show id) ++ " : " ++ (show seq)
           rest = showSeqs xs
 
 showSteps :: [(ID, Step)] -> String
 showSteps [] = ""
 showSteps ((id, step):xs) = this ++ rest
-    where this = "\n\t\t" ++ (show id) ++ ":" ++ (show step)
+    where this = "\n\t\t" ++ (show id) ++ " : " ++ (show step)
           rest = showSteps xs
 
 start :: Sequent -> Proof
