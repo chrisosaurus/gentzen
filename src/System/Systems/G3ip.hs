@@ -1,4 +1,4 @@
-module Prover.Systems.G3ip
+module System.Systems.G3ip
 (
     axiom,
     left_and,
@@ -14,8 +14,8 @@ module Prover.Systems.G3ip
 where
 
 import Sequent.Data.Sequent
-import Prover.Data.Rule
-import Prover.Data.System
+import System.Data.Rule
+import System.Data.System
 
 axiom :: Rule
 axiom = Axiom "axiom" axiom'

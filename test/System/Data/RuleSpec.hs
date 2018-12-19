@@ -1,4 +1,4 @@
-module Prover.Data.RuleSpec
+module System.Data.RuleSpec
 (
     main,
     spec,
@@ -8,7 +8,7 @@ where
 import Test.Hspec
 
 import Sequent.Data.Sequent
-import Prover.Data.Rule
+import System.Data.Rule
 
 -- theorem silly-axiom
 -- system G3ip

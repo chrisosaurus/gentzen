@@ -1,4 +1,4 @@
-module Prover.Parser
+module Proof.Parser
 (
     parse,
 )
@@ -7,7 +7,7 @@ where
 import Lexer
 import qualified Sequent.Data.Sequent as Sequent
 import qualified Sequent.Parser as Sequent
-import Prover.Data.Theorem
+import Proof.Data.Theorem
 
 consume_symbol :: String -> [Token] -> Either String [Token]
 consume_symbol exp (Symbol sym:rest) | exp == sym = Right rest

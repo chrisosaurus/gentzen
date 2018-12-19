@@ -1,4 +1,4 @@
-module Prover.Data.SequentTree
+module Proof.Data.SequentTree
 (
     SequentTree (..),
 )

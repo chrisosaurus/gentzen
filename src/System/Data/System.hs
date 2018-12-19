@@ -1,4 +1,4 @@
-module Prover.Data.System
+module System.Data.System
 (
     System (..),
     find_rule,
@@ -6,7 +6,7 @@ module Prover.Data.System
 where
 
 import Sequent.Data.Sequent
-import Prover.Data.Rule
+import System.Data.Rule
 
 --                   name   rules
 data System = System String [Rule]

@@ -1,4 +1,4 @@
-module Prover.ParserSpec
+module Proof.ParserSpec
 (
     main,
     spec,
@@ -8,8 +8,8 @@ where
 import Test.Hspec
 
 import Lexer
-import Prover.Data.Theorem
-import Prover.Parser
+import Proof.Data.Theorem
+import Proof.Parser
 import qualified Sequent.Data.Sequent as Sequent
 
 -- theorem silly-axiom

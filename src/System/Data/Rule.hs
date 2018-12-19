@@ -1,4 +1,4 @@
-module Prover.Data.Rule
+module System.Data.Rule
 (
     Rule (..),
     apply_axiom,

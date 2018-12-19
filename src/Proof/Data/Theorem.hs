@@ -1,4 +1,4 @@
-module Prover.Data.Theorem
+module Proof.Data.Theorem
 (
     Stmt (..),
     Theorem (..),
