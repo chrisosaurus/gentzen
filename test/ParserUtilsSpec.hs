@@ -29,6 +29,14 @@ spec = do
       let expression = consume_token LParen []
       let expected = Left "Token not found: ("
       expression `shouldBe` expected
+    it "expect_token success" $ do
+      let expression = expect_token (Symbol "Hello") [Symbol "Hello"]
+      let expected = Right [Symbol "Hello"]
+      expression `shouldBe` expected
+    it "expect_token failure" $ do
+      let expression = expect_token (Symbol "oops") []
+      let expected = Left "Token not found: oops"
+      expression `shouldBe` expected
     it "expect_empty success" $ do
       let expression = expect_empty []
       let expected = Right []
