@@ -1,6 +1,4 @@
 system G3ip
-operators ^ v ->
-values bottom
 rules
     axiom         (a)    (L |- R) = [(a in L), (a in R)].()
     left_and      (a^b)  (L |- R) = L-(a^b)+a+b |- R
