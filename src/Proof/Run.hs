@@ -28,6 +28,8 @@ run sy th = do
     return (str, st)
 
 run' :: System -> [Sequent] -> [Stmt] -> Either String ([String], [(Sequent, SequentTree)])
+run' _      _    []           = do
+    return ([], [])
 run' system seqs (stmt:stmts) = case stmt of
     Branch lstmts rstmts -> do
         (lseq, rseq)<- expect_double seqs
