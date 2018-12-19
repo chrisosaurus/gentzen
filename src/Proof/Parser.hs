@@ -4,7 +4,7 @@ module Proof.Parser
 )
 where
 
-import Lexer
+import Data.Token
 import qualified Sequent.Data.Sequent as Sequent
 import qualified Sequent.Parser as Sequent
 import Proof.Data.Theorem

@@ -7,7 +7,7 @@ where
 
 import Test.Hspec
 
-import Lexer
+import Data.Token
 import ParserUtils
 
 spec :: Spec

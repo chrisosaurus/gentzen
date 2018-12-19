@@ -8,7 +8,7 @@ module Sequent.Parser
 where
 
 import qualified Sequent.Data.Sequent as Sequent
-import Lexer
+import Data.Token
 import Control.Applicative
 import ParserUtils
 

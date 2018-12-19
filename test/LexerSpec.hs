@@ -8,6 +8,7 @@ where
 import Test.Hspec
 
 import Lexer
+import Data.Token
 
 spec :: Spec
 spec = do

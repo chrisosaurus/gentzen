@@ -7,7 +7,7 @@ where
 
 import Test.Hspec
 
-import Lexer
+import Data.Token
 import Proof.Data.Theorem
 import Proof.Parser
 import qualified Sequent.Data.Sequent as Sequent

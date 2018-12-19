@@ -7,7 +7,7 @@ module ParserUtils
 )
 where
 
-import Lexer
+import Data.Token
 
 consume_symbol :: String -> [Token] -> Either String [Token]
 consume_symbol exp (Symbol sym:rest) | exp == sym = Right rest
