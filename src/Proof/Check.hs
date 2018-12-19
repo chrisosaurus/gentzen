@@ -7,6 +7,6 @@ where
 import Proof.Data.Theorem
 import Proof.Data.SequentTree
 
-check :: Theorem -> Either String String
+check :: Theorem -> Either String ()
 check _ = Left "check: unimplemented"
 

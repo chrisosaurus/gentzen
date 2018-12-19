@@ -2,6 +2,7 @@ module System.Check
 (
     check_rule,
     check_system,
+    check,
 )
 where
 
@@ -9,6 +10,9 @@ import Sequent.Data.Sequent
 import System.Data.Rewrite
 import System.Data.Rule
 import System.Data.System
+
+check :: System -> Either String ()
+check system = check_system system
 
 -- check that a given system is well formed
 --
