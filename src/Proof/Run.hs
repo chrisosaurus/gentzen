@@ -60,7 +60,8 @@ run' system seqs (stmt:stmts) = case stmt of
         return (str, st)
     Abort -> do
         seq       <- expect_single seqs
-        return ([], [(seq, Aborted)])
+        str       <- return $ "Aborted: " ++ (show seq)
+        return ([str], [(seq, Aborted)])
 
 expect_single :: [Sequent] -> Either String Sequent
 expect_single []     = Left "No sequent found"
