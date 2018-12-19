@@ -8,22 +8,7 @@ import Lexer
 import qualified Sequent.Data.Sequent as Sequent
 import qualified Sequent.Parser as Sequent
 import Proof.Data.Theorem
-
-consume_symbol :: String -> [Token] -> Either String [Token]
-consume_symbol exp (Symbol sym:rest) | exp == sym = Right rest
-consume_symbol exp _ = Left $ "Symbol not found: " ++ (show exp)
-
-consume_token :: Token -> [Token] -> Either String [Token]
-consume_token exp (tok:rest) | exp == tok = Right rest
-consume_token exp _ = Left $ "Token not found: " ++ (show exp)
-
-expect_empty :: [Token] -> Either String [Token]
-expect_empty [] = Right []
-expect_empty rem = Left $ "Expected empty: " ++ (show rem)
-
-parse_string :: [Token] -> Either String ([Token], String)
-parse_string (Symbol s:rest) = Right (rest, s)
-parse_string rem = Left $ "Expected string: " ++ (show rem)
+import ParserUtils
 
 parse :: [Token] -> Either String Theorem
 parse tokens = do
@@ -31,7 +16,7 @@ parse tokens = do
     (tokens, system) <- parse_system tokens
     (tokens, sequent) <- parse_sequent tokens
     (tokens, steps) <- parse_proof tokens
-    tokens <- expect_empty tokens
+    [] <- expect_empty tokens
     return Theorem {name=name, system=system, sequent=sequent, steps=steps}
 
 parse_name :: [Token] -> Either String ([Token], String)

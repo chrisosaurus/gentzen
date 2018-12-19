@@ -10,13 +10,14 @@ where
 import qualified Sequent.Data.Sequent as Sequent
 import Lexer
 import Control.Applicative
+import ParserUtils
 
 -- parse consumes all input and raises error if there is any left
 parse :: [Token] -> Either String Sequent.Sequent
 parse [] = Left "No tokens, expected Sequent"
 parse toks = do
     (toks, seq) <- parse_prefix toks
-    seq <- expect_empty toks seq
+    [] <- expect_empty toks
     return seq
 
 -- parse_prefix will greedily consume a sequent from the front, but leave the
@@ -25,18 +26,10 @@ parse_prefix :: [Token] -> Either String ([Token], Sequent.Sequent)
 parse_prefix [] = Left "No tokens, expected Sequent"
 parse_prefix toks = do
     (toks, lhs) <- parse_commalist toks
-    toks <- remove_token Turnstyle toks
+    toks <- consume_token Turnstyle toks
     (toks, rhs) <- parse_commalist toks
     let seq = Sequent.Sequent lhs rhs
     return (toks, seq)
-
-expect_empty :: [Token] -> Sequent.Sequent -> Either String Sequent.Sequent
-expect_empty [] seq = Right seq
-expect_empty rem  _   = Left $ "Failed to parse all of sequent :" ++ (show rem)
-
-remove_token :: Token -> [Token] -> Either String [Token]
-remove_token exp (tok:rest) | exp == tok = Right rest
-remove_token _ _ = Left "remove_token No token found"
 
 parse_commalist :: [Token] -> Either String ([Token], [Sequent.Exp])
 parse_commalist [] = Right ([], [])
@@ -51,7 +44,7 @@ parse_commalist toks = case (parse_exp toks) of
 parse_exp :: [Token] -> Either String ([Token], Sequent.Exp)
 parse_exp (LParen:toks) = do
     (toks, inner) <- parse_exp toks
-    toks <- remove_token RParen toks
+    toks <- consume_token RParen toks
     return (toks, Sequent.Bracketed inner)
 parse_exp toks = do
     (toks, single) <- parse_single toks
