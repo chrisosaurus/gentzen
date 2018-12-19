@@ -12,6 +12,7 @@ data Stmt = Axiom String
           | Substeps [Stmt]
           | Expect Sequent
           | Print
+          | Abort
     deriving (Show, Eq)
 
 -- theorem silly-axiom

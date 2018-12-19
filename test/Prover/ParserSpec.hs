@@ -61,6 +61,7 @@ spec = do
                            , Symbol "print"
                            , Symbol "expect", Symbol "a", Turnstyle, Symbol "a"
                            , Symbol "axiom",  Symbol "a"
+                           , Symbol "abort"
                        , Symbol "qed"
                        ]
       let expected = Right $ Theorem { name    = "silly-axiom"
@@ -69,6 +70,7 @@ spec = do
                                      , steps   = [ Print
                                                  , Expect (Sequent.Sequent [Sequent.Symbol "a"] [Sequent.Symbol "a"])
                                                  , Axiom "a"
+                                                 , Abort
                                                  ]
                                      }
       parse expression `shouldBe` expected
