@@ -34,7 +34,9 @@ data Step  = Axiom    ID String [Exp]
 
 data Proof = Proof { sequents :: Map.Map ID Sequent
                    , steps    :: Map.Map ID Step
-                   -- unproven is a 'stack' of IDs, head is most recent.
+                   -- unproven is stackish in that the most recently created
+                   -- unproven sequents make the head of the list,
+                   -- but removes can happen anywhere within it.
                    , unproven :: [ID]
                    , aborted  :: Set.Set ID
                    , nextId   :: ID
@@ -65,6 +67,38 @@ showSteps ((id, step):xs) = this ++ rest
     where this = "\n\t\t" ++ (show id) ++ " : " ++ (show step)
           rest = showSteps xs
 
+
+-- internal / private helpers
+
+-- add a new Sequent, assign it an ID, but do NOT record it as unproven
+registerSeq :: Sequent -> Proof -> (ID, Proof)
+registerSeq seq Proof { sequents
+                      , steps
+                      , unproven
+                      , aborted
+                      , nextId   = id
+                      } = (id, newProof)
+    where newProof = Proof { sequents = Map.insert id seq sequents
+                           , steps
+                           , unproven
+                           , aborted
+                           , nextId   = id+ 1
+                           }
+
+markUnproven :: ID -> Proof -> Proof
+markUnproven id Proof { sequents
+                      , steps
+                      , unproven
+                      , aborted
+                      , nextId
+                      } = newProof
+    where newProof = Proof { sequents
+                           , steps
+                           , unproven = id:unproven
+                           , aborted
+                           , nextId
+                           }
+
 start :: Sequent -> Proof
 start seq = Proof { sequents = Map.singleton goal_id seq
                   , steps    = Map.empty
@@ -79,18 +113,9 @@ finished :: Proof -> Bool
 finished Proof {unproven=unproven} = null unproven
 
 addSeq :: Sequent -> Proof -> (ID, Proof)
-addSeq seq Proof { sequents
-                 , steps
-                 , unproven
-                 , aborted
-                 , nextId   = id
-                 } = (id, newProof)
-    where newProof = Proof { sequents = Map.insert id seq sequents
-                           , steps
-                           , unproven = id:unproven
-                           , aborted
-                           , nextId   = id+ 1
-                           }
+addSeq seq proof = (id, proof'')
+    where (id, proof') = registerSeq seq proof
+          proof''      = markUnproven id proof'
 
 addSeq' :: Sequent -> Proof -> Proof
 addSeq' seq proof = newProof
@@ -98,13 +123,23 @@ addSeq' seq proof = newProof
 
 addSeqs :: [Sequent] -> Proof -> ([ID], Proof)
 addSeqs [] proof = ([], proof)
-addSeqs (seq:seqs) proof = (id:ids, finalProof)
-    where (id, newProof)    = addSeq seq proof
-          (ids, finalProof) = addSeqs seqs newProof
+addSeqs (seq:seqs) proof = (id:ids, proof''')
+    -- register sequents in order so that the assigned numbers are the natural
+    -- order they were discovered in
+    -- e.g.
+    --      2    3
+    --      ------
+    --        1
+    --
+    -- markUnproven in reverse order so that the stack has left side first
+    --  [2, 3, 1, ...]
+    where (id,  proof')  = registerSeq seq proof
+          (ids, proof'') = addSeqs seqs proof'
+          proof'''       = markUnproven id proof''
 
 addSeqs' :: [Sequent] -> Proof -> Proof
 addSeqs' seqs proof = newProof
-    where (ids, newProof) = addSeqs seqs proof
+    where (_, newProof) = addSeqs seqs proof
 
 addStep :: Step -> Proof -> Proof
 addStep step Proof { sequents
@@ -147,7 +182,7 @@ tip Proof { unproven = (x:_) } = Right x
 -- for conversion.
 tipN :: Int -> Proof -> Either String [ID]
 tipN n Proof { unproven } = if (length unproven) >= n
-    then Right $ reverse $ take n unproven
+    then Right $ take n unproven
     else Left  $ "Error: wanted '" ++ (show n) ++
                  "' but only had '" ++ (show (length unproven)) ++
                  "' unproven sequents."

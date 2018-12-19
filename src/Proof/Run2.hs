@@ -40,9 +40,8 @@ run' sy proof (stmt:stmts) = case stmt of
         -- branch should mean we have no remaining stmts
         -- TODO FIXME make the error message here prettier
         []             <- return stmts
-        -- internally it is a *stack* so we must do right branch first
-        (rstrs, proof) <- run' sy proof rstmts
         (lstrs, proof) <- run' sy proof lstmts
+        (rstrs, proof) <- run' sy proof rstmts
         return (lstrs ++ rstrs, proof)
 
     Apply name args -> do

@@ -67,7 +67,7 @@ spec = do
                                     ]
       let expected   = Proof { sequents = sequentsMap
                              , steps    = Map.empty
-                             , unproven = [3, 2, 1, 0]
+                             , unproven = [1, 2, 3, 0]
                              , aborted  = Set.empty
                              , nextId   = 4
                              }
@@ -86,7 +86,7 @@ spec = do
                                     ]
       let expected   = Proof { sequents = sequentsMap
                              , steps    = Map.empty
-                             , unproven = [3, 2, 1, 0]
+                             , unproven = [1, 2, 3, 0]
                              , aborted  = Set.empty
                              , nextId   = 4
                              }
@@ -144,7 +144,7 @@ spec = do
                        , Sequent [Symbol "three"] []
                        ]
       let expression = addSeqs' sequents $ start (Sequent [] [])
-      let expected   = Right [0, 1, 2, 3]
+      let expected   = Right [1, 2, 3, 0]
       tipN 4 expression `shouldBe` expected
 
     it "get failure" $ do
