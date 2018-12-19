@@ -20,7 +20,8 @@ spec = do
       let expression = start sequent
       let expected   = Proof { sequents = Map.singleton 0 sequent
                              , steps    = Map.empty
-                             , unproven = Set.singleton 0
+                             , unproven = [0]
+                             , aborted  = Set.empty
                              , nextId   = 1
                              }
       expression `shouldBe` expected
@@ -33,7 +34,8 @@ spec = do
                                     ]
       let expected   = Proof { sequents = sequents
                              , steps    = Map.empty
-                             , unproven = Set.fromList [0, 1]
+                             , unproven = [1, 0]
+                             , aborted  = Set.empty
                              , nextId   = 2
                              }
       addSeq sequent expression `shouldBe` (1, expected)
@@ -43,12 +45,31 @@ spec = do
       let expression = start (Sequent [] [])
       let expected   = Proof { sequents = Map.singleton 0 (Sequent [] [])
                              , steps    = Map.singleton 0 step
-                             , unproven = Set.empty
+                             , unproven = []
+                             , aborted  = Set.empty
                              , nextId   = 1
                              }
       addStep step expression `shouldBe` expected
 
+    it "abortSeq" $ do
+      let expression = start (Sequent [] [])
+      let expected   = Proof { sequents = Map.singleton 0 (Sequent [] [])
+                             , steps    = Map.empty
+                             , unproven = []
+                             , aborted  = Set.singleton 0
+                             , nextId   = 1
+                             }
+      abortSeq 0 expression `shouldBe` expected
 
+    it "finished false" $ do
+      let expression = start (Sequent [] [])
+      let expected   = False
+      finished expression `shouldBe` expected
+
+    it "finished true" $ do
+      let expression = abortSeq 0 $ start (Sequent [] [])
+      let expected   = True
+      finished expression `shouldBe` expected
 
 main :: IO ()
 main = hspec spec
