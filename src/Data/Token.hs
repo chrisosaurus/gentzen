@@ -22,6 +22,7 @@ data Token = Turnstyle
            | Plus
            | Minus
            | Period
+           | Equal
     deriving (Eq)
 
 stringify :: Token -> String
@@ -43,6 +44,7 @@ stringify Exists = "exists"
 stringify Plus = "+"
 stringify Minus = "-"
 stringify Period = "."
+stringify Equal = "="
 
 instance Show Token where
   show token = stringify token

@@ -117,6 +117,10 @@ spec = do
       let expression = "."
       let expected = Right [Period]
       lexer expression `shouldBe` expected
+    it "equal" $ do
+      let expression = "="
+      let expected = Right [Equal]
+      lexer expression `shouldBe` expected
 
   describe "compound lexer tests" $ do
     it "simple and" $ do

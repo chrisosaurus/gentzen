@@ -35,6 +35,7 @@ lexer string                 =
                         , lexer_plus string
                         , lexer_minus string
                         , lexer_period string
+                        , lexer_equal string
                         , lexer_symbol string
                         ]
 
@@ -121,6 +122,10 @@ lexer_minus _          = Nothing
 lexer_period :: String -> Maybe(Token, String)
 lexer_period ('.':rest) = Just (Period, rest)
 lexer_period _          = Nothing
+
+lexer_equal :: String -> Maybe(Token, String)
+lexer_equal ('=':rest) = Just (Equal, rest)
+lexer_equal _          = Nothing
 
 lexer_symbol :: String -> Maybe (Token, String)
 lexer_symbol string = lexer_symbol' string ""
