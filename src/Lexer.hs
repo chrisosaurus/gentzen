@@ -22,6 +22,7 @@ data Token = Turnstyle
            | LSquare
            | RSquare
            | Symbol String
+           | Bottom
     deriving (Eq)
 
 stringify :: Token -> String
@@ -37,6 +38,7 @@ stringify RCurly = "}"
 stringify LSquare = "["
 stringify RSquare = "]"
 stringify (Symbol s) = s
+stringify Bottom  = "_"
 
 instance Show Token where
   show token = stringify token
@@ -51,7 +53,8 @@ lexer string                 =
          Just (ltoken, remaining) -> case lexer remaining of
                                           Left str -> Left str
                                           Right rtokens -> Right (ltoken:rtokens)
-    where lexer_parts = [ lexer_turnstyle string
+    where lexer_parts = [ lexer_bottom string
+                        , lexer_turnstyle string
                         , lexer_comma string
                         , lexer_implies string
                         , lexer_and string
@@ -68,6 +71,10 @@ lexer string                 =
 trim_space :: String -> String
 trim_space (ch:rest) | isSpace ch = trim_space rest
 trim_space str = str
+
+lexer_bottom :: String -> Maybe(Token, String)
+lexer_bottom ('_':rest) = Just (Bottom, rest)
+lexer_bottom _          = Nothing
 
 lexer_turnstyle :: String -> Maybe(Token, String)
 lexer_turnstyle ('|':'-':rest) = Just (Turnstyle, rest)

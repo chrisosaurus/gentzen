@@ -4,6 +4,12 @@ module Prover.Data.Rule
     remove_exp,
     remove_exp_lhs,
     remove_exp_rhs,
+    add_exp,
+    add_exps,
+    add_exp_lhs,
+    add_exps_lhs,
+    add_exp_rhs,
+    add_exps_rhs,
     split_exp,
     split_exp_lhs,
     split_exp_rhs,
@@ -13,15 +19,18 @@ where
 
 import Sequent.Data.Sequent
 
---                 name    name      args         input                    output
-data Rule = Unary  String (String -> [Sequent] -> Sequent -> Either String Sequent)
-          | Binary String (String -> [Sequent] -> Sequent -> Either String (Sequent, Sequent))
+--                 name    args     input                    output
+data Rule = Axiom  String ([Exp] -> Sequent -> Either String ())
+          | Unary  String ([Exp] -> Sequent -> Either String Sequent)
+          | Binary String ([Exp] -> Sequent -> Either String (Sequent, Sequent))
 
 instance Show Rule where
+    show (Axiom  name _) = "rule " ++ name
     show (Unary  name _) = "rule " ++ name
     show (Binary name _) = "rule " ++ name
 
 instance Eq Rule where
+    (==) (Axiom  name _) (Axiom  name' _) = name == name'
     (==) (Unary  name _) (Unary  name' _) = name == name'
     (==) (Binary name _) (Binary name' _) = name == name'
     (==) _ _ = False
@@ -43,6 +52,24 @@ remove_exp_rhs :: Exp -> Sequent -> Either String Sequent
 remove_exp_rhs exp (Sequent lhs rhs) = case remove_exp exp rhs of
                                         Left  l    -> Left l
                                         Right rhs' -> Right (Sequent lhs  rhs')
+
+add_exp :: Exp -> [Exp] -> [Exp]
+add_exp exp lst = (exp:lst)
+
+add_exps :: [Exp] -> [Exp] -> [Exp]
+add_exps exp lst = (exp ++ lst)
+
+add_exp_lhs :: Exp -> Sequent -> Sequent
+add_exp_lhs exp (Sequent lhs rhs) = (Sequent (exp:lhs) rhs)
+
+add_exps_lhs :: [Exp] -> Sequent -> Sequent
+add_exps_lhs exps (Sequent lhs rhs) = (Sequent (lhs ++ exps) rhs)
+
+add_exp_rhs :: Exp -> Sequent -> Sequent
+add_exp_rhs exp (Sequent lhs rhs) = (Sequent lhs (exp:rhs))
+
+add_exps_rhs :: [Exp] -> Sequent -> Sequent
+add_exps_rhs exps (Sequent lhs rhs) = (Sequent lhs (rhs ++ exps))
 
 split_exp :: Exp -> Either String (Exp, Exp)
 split_exp (And     l r) = Right (l, r)

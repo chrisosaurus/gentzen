@@ -10,6 +10,7 @@ data Exp = And       Exp Exp
          | Implies   Exp Exp
          | Bracketed Exp
          | Symbol    String
+         | Bottom
     deriving (Eq)
 
 data Sequent = Sequent [Exp] [Exp]
@@ -21,6 +22,7 @@ instance Show Exp where
     show (Implies l r) = (show l) ++ "->" ++ (show r)
     show (Bracketed e) = "(" ++ (show e) ++ ")"
     show (Symbol s)    = s
+    show (Bottom)      = "_"
 
 instance Show Sequent where
     show (Sequent lhs rhs) = (show lhs) ++ " |- " ++ (show rhs)

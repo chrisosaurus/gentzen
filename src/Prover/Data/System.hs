@@ -21,6 +21,7 @@ find_rule (System system_name rules) rule_name = case (find_rule' rules rule_nam
 
 find_rule' :: [Rule] -> String -> Maybe Rule
 find_rule' [] _ = Nothing
+find_rule' (rule@(Axiom  name _):tail) name' | name == name' = Just rule
 find_rule' (rule@(Unary  name _):tail) name' | name == name' = Just rule
 find_rule' (rule@(Binary name _):tail) name' | name == name' = Just rule
 find_rule' (x:xs) name = find_rule' xs name

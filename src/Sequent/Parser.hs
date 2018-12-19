@@ -58,6 +58,8 @@ parse_exp toks = do
     return (toks', single)
 
 parse_single :: [Token] -> Either String ([Token], Sequent.Exp)
+parse_single (Bottom:rest) = do
+    return (rest, Sequent.Bottom)
 parse_single (Symbol l:Implies:rest) = do
     (rest', rhs) <- parse_exp rest
     return (rest', Sequent.Implies (Sequent.Symbol l) rhs)
