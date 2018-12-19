@@ -160,6 +160,45 @@ spec = do
       let expected = Right $ And (Symbol "1") (Implies (Symbol "1") (Symbol "2"))
       instantiate sexp env `shouldBe` expected
 
+  describe "rewrite_prop" $ do
+    it "rewrite_prop" $ do
+      let prop = In (Symbol "a") "L"
+      let env = Env "a" [Symbol "1"] $ Env "L" [Symbol "1"] EnvEmpty
+      let expected = Right $ InSet (Symbol "1") [Symbol "1"]
+      rewrite_prop prop env `shouldBe` expected
+
+  describe "rewrite_props" $ do
+    it "rewrite_props" $ do
+      let props = [In (Symbol "a") "L", In (Symbol "b") "R"]
+      let env = Env "a" [Symbol "1"] $ Env "L" [Symbol "1"] $
+                Env "b" [Symbol "2"] $ Env "R" [Symbol "2"] EnvEmpty
+      let expected = Right $ [ InSet (Symbol "1") [Symbol "1"]
+                             , InSet (Symbol "2") [Symbol "2"]
+                             ]
+      rewrite_props props env `shouldBe` expected
+
+  describe "apply_prop" $ do
+    it "apply_prop error 1" $ do
+      let prop = In (Symbol "a") "L"
+      let expected = Left "System.Apply.apply_prop: error unexpected In 'In a \"L\"'."
+      apply_prop prop `shouldBe` expected
+    it "apply_prop error 2" $ do
+      let prop = InSet (Symbol "1") [Symbol "2"]
+      let expected = Left "Proposition failed: 'InSet 1 [2]'."
+      apply_prop prop `shouldBe` expected
+    it "apply_prop" $ do
+      let prop = InSet (Symbol "1") [Symbol "1"]
+      let expected = Right ()
+      apply_prop prop `shouldBe` expected
+
+  describe "apply_props" $ do
+    it "apply_props" $ do
+      let props = [ InSet (Symbol "1") [Symbol "1"]
+                  , InSet (Symbol "2") [Symbol "2"]
+                  ]
+      let expected = Right ()
+      apply_props props `shouldBe` expected
+
   describe "rewrite_expr" $ do
     it "rewrite_expr Add 1" $ do
       let expr = (Add (Symbol "a"))

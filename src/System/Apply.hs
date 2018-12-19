@@ -11,7 +11,12 @@ module System.Apply
     rewrite_exprs,
     rewrite_expr,
     rewrite_term,
+    rewrite_props,
+    rewrite_prop,
+    apply_props,
+    apply_prop,
     instantiate,
+    instantiates,
 )
 where
 
@@ -21,12 +26,44 @@ import System.Data.Rule
 import qualified System.Data.Env as Env
 
 apply :: Sequent.Sequent -> Rule -> [Sequent.Exp] -> Either String [Sequent.Sequent]
-apply from rule@(Rule {rule_name=rule_name}) args = do
+apply from rule@(Rule {rule_name=rule_name, props=props}) args = do
     arg_env <- destruct_args rule args
     seq_env <- destruct_sequent from rule
     env     <- Env.merge arg_env seq_env
+    props   <- rewrite_props props env
+    ()      <- apply_props props
     result  <- rewrite rule env
     return result
+
+rewrite_props :: [Prop] -> Env.Env -> Either String [Prop]
+rewrite_props []     _   = Right []
+rewrite_props (x:xs) env = do
+    prop  <- rewrite_prop x env
+    props <- rewrite_props xs env
+    return (prop:props)
+
+rewrite_prop :: Prop -> Env.Env -> Either String Prop
+rewrite_prop (In sexp str) env = do
+    sexp <- instantiate sexp env
+    set  <- Env.get env str
+    return $ InSet sexp set
+rewrite_prop (InSet sexp sexps) env = do
+    sexp  <- instantiate sexp env
+    sexps <- instantiates sexps env
+    return $ InSet sexp sexps
+
+apply_props :: [Prop] -> Either String ()
+apply_props [] = Right ()
+apply_props (x:xs) = do
+    apply_prop x
+    apply_props xs
+    return ()
+
+apply_prop :: Prop -> Either String ()
+apply_prop p@(In _ _) = Left $ "System.Apply.apply_prop: error unexpected In '" ++ (show p) ++ "'."
+apply_prop p@(InSet l r) = if (elem l r)
+                            then Right ()
+                            else Left $ "Proposition failed: '" ++ (show p) ++ "'."
 
 rewrite :: Rule -> Env.Env -> Either String [Sequent.Sequent]
 rewrite Rule{body=body} env = rewrite_body body env
@@ -73,6 +110,13 @@ rewrite_expr (Remove sexp) env state = do
     sexp  <- instantiate sexp env
     state <- remove_exp sexp state
     return state
+
+instantiates :: [Sequent.Exp] -> Env.Env -> Either String [Sequent.Exp]
+instantiates [] _ = Right []
+instantiates (x:xs) env = do
+    x  <- instantiate x env
+    xs <- instantiates xs env
+    return (x:xs)
 
 instantiate :: Sequent.Exp -> Env.Env -> Either String Sequent.Exp
 instantiate (Sequent.And l r) env = do
