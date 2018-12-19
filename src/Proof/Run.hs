@@ -36,6 +36,10 @@ run' _      seqs    []        = Left $
     "Failed to discharge remaining proof obligations: " ++ (show seqs)
 run' system seqs (stmt:stmts) = case stmt of
     Branch lstmts rstmts -> do
+        -- branch should mean we have no remaining stmts
+        -- TODO FIXME make the error message here prettier
+        []        <- return stmts
+        seq       <- expect_single seqs
         (lseq, rseq)<- expect_double seqs
         (lstr, lst) <- run' system [lseq] lstmts
         (rstr, rst) <- run' system [rseq] rstmts
@@ -59,6 +63,9 @@ run' system seqs (stmt:stmts) = case stmt of
         str       <- return $ (show seqs):str
         return (str, st)
     Abort -> do
+        -- abort should mean we have no remaining stmts
+        -- TODO FIXME make the error message here prettier
+        []        <- return stmts
         seq       <- expect_single seqs
         str       <- return $ "Aborted: " ++ (show seq)
         return ([str], [(seq, Aborted)])
