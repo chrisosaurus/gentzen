@@ -23,6 +23,8 @@ data Token = Turnstyle
            | RSquare
            | Symbol String
            | Bottom
+           | Forall
+           | Exists
     deriving (Eq)
 
 stringify :: Token -> String
@@ -39,6 +41,8 @@ stringify LSquare = "["
 stringify RSquare = "]"
 stringify (Symbol s) = s
 stringify Bottom  = "_"
+stirngify Forall = "forall"
+stirngify Exists = "exists"
 
 instance Show Token where
   show token = stringify token
@@ -54,6 +58,8 @@ lexer string                 =
                                           Left str -> Left str
                                           Right rtokens -> Right (ltoken:rtokens)
     where lexer_parts = [ lexer_bottom string
+                        , lexer_forall string
+                        , lexer_exists string
                         , lexer_turnstyle string
                         , lexer_comma string
                         , lexer_implies string
@@ -76,8 +82,19 @@ lexer_bottom :: String -> Maybe(Token, String)
 lexer_bottom ('_':rest) = Just (Bottom, rest)
 lexer_bottom _          = Nothing
 
+lexer_forall :: String -> Maybe(Token, String)
+lexer_forall ('f':'o':'r':'a':'l':'l':rest) = Just (Forall, rest)
+lexer_forall ('∀':rest) = Just (Forall, rest)
+lexer_forall _          = Nothing
+
+lexer_exists :: String -> Maybe(Token, String)
+lexer_exists ('e':'x':'i':'s':'t':'s':rest) = Just (Exists, rest)
+lexer_exists ('∃':rest) = Just (Exists, rest)
+lexer_exists _          = Nothing
+
 lexer_turnstyle :: String -> Maybe(Token, String)
 lexer_turnstyle ('|':'-':rest) = Just (Turnstyle, rest)
+lexer_turnstyle ('⊢':rest) = Just (Turnstyle, rest)
 lexer_turnstyle _          = Nothing
 
 lexer_comma :: String -> Maybe(Token, String)
@@ -86,17 +103,22 @@ lexer_comma _          = Nothing
 
 lexer_implies :: String -> Maybe(Token, String)
 lexer_implies ('-':'>':rest) = Just (Implies, rest)
+lexer_implies ('→':rest) = Just(Implies, rest)
 lexer_implies _          = Nothing
 
 lexer_and :: String -> Maybe(Token, String)
 lexer_and ('^':rest) = Just (And, rest)
 lexer_and ('&':rest) = Just (And, rest)
+lexer_and ('/':'\\':rest) = Just (And, rest)
+lexer_and ('∧':rest) = Just (And, rest)
 lexer_and _          = Nothing
 
 lexer_or :: String -> Maybe(Token, String)
 lexer_or ('v':rest) = Just (Or, rest)
 lexer_or ('V':rest) = Just (Or, rest)
 lexer_or ('|':rest) = Just (Or, rest)
+lexer_or ('\\':'/':rest) = Just (Or, rest)
+lexer_or ('∨':rest) = Just (Or, rest)
 lexer_or _          = Nothing
 
 lexer_lparen :: String -> Maybe(Token, String)

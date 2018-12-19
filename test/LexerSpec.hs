@@ -40,8 +40,16 @@ spec = do
       let expression = "|-"
       let expected = Right [Turnstyle]
       lexer expression `shouldBe` expected
+    it "turnstyle ⊢" $ do
+      let expression = "⊢"
+      let expected = Right [Turnstyle]
+      lexer expression `shouldBe` expected
     it "implies" $ do
       let expression = "->"
+      let expected = Right [Implies]
+      lexer expression `shouldBe` expected
+    it "implies →" $ do
+      let expression = "→"
       let expected = Right [Implies]
       lexer expression `shouldBe` expected
     it "and ^" $ do
@@ -50,6 +58,10 @@ spec = do
       lexer expression `shouldBe` expected
     it "and &" $ do
       let expression = "&"
+      let expected = Right [And]
+      lexer expression `shouldBe` expected
+    it "and ∧" $ do
+      let expression = "∧"
       let expected = Right [And]
       lexer expression `shouldBe` expected
     it "or v" $ do
@@ -63,6 +75,26 @@ spec = do
     it "or |" $ do
       let expression = "|"
       let expected = Right [Or]
+      lexer expression `shouldBe` expected
+    it "or ∨" $ do
+      let expression = "∨"
+      let expected = Right [Or]
+      lexer expression `shouldBe` expected
+    it "forall" $ do
+      let expression = "forall"
+      let expected = Right [Forall]
+      lexer expression `shouldBe` expected
+    it "forall ∀" $ do
+      let expression = "∀"
+      let expected = Right [Forall]
+      lexer expression `shouldBe` expected
+    it "exists" $ do
+      let expression = "exists"
+      let expected = Right [Exists]
+      lexer expression `shouldBe` expected
+    it "exists ∀" $ do
+      let expression = "∃"
+      let expected = Right [Exists]
       lexer expression `shouldBe` expected
 
   describe "compound lexer tests" $ do
