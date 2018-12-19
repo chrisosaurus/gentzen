@@ -1,6 +1,7 @@
 module Sequent.Parser
 (
     parse,
+    parse_prefix,
 )
 where
 
@@ -8,15 +9,24 @@ import qualified Sequent.Data.Sequent as Sequent
 import Lexer
 import Control.Applicative
 
+-- parse consumes all input and raises error if there is any left
 parse :: [Token] -> Either String Sequent.Sequent
 parse [] = Left "No tokens, expected Sequent"
 parse toks = do
+    (toks', seq) <- parse_prefix toks
+    seq' <- expect_empty toks' seq
+    return seq'
+
+-- parse_prefix will greedily consume a sequent from the front, but leave the
+-- remaining tokens untouched
+parse_prefix :: [Token] -> Either String ([Token], Sequent.Sequent)
+parse_prefix [] = Left "No tokens, expected Sequent"
+parse_prefix toks = do
     (toks', lhs) <- parse_commalist toks
     toks'' <- remove_token Turnstyle toks'
     (toks''', rhs) <- parse_commalist toks''
     let seq = Sequent.Sequent lhs rhs
-    seq' <- expect_empty toks''' seq
-    return seq'
+    return (toks''', seq)
 
 expect_empty :: [Token] -> Sequent.Sequent -> Either String Sequent.Sequent
 expect_empty [] seq = Right seq
@@ -35,8 +45,7 @@ parse_commalist toks = case (parse_exp toks) of
                                                             Left l -> Left l
                                                             Right (toks'', exp') -> Right (toks'', (exp:exp'))
                             Right (Turnstyle:toks', exp) -> Right (Turnstyle:toks', [exp])
-                            Right ([], exp) -> Right ([], [exp])
-                            Right (toks', exp) -> Left $ "Unexpected token " ++ show toks'
+                            Right (toks, exp) -> Right (toks, [exp])
 
 parse_exp :: [Token] -> Either String ([Token], Sequent.Exp)
 parse_exp (LParen:toks) = do
