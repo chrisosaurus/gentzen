@@ -48,13 +48,20 @@ parse_sequent tokens = do
     (tokens'', sequent) <- Sequent.parse_prefix tokens'
     return (tokens'', sequent)
 
--- TODO FIXME parse_proof only supports a single statement
 parse_proof :: [Token] -> Either String ([Token], [Stmt])
 parse_proof tokens = do
     tokens' <- consume_symbol "proof" tokens
-    (tokens'', stmt) <- parse_stmt tokens'
+    (tokens'', body) <- parse_proof_body tokens'
     tokens''' <- consume_symbol "qed" tokens''
-    return (tokens''', [stmt])
+    return (tokens''', body)
+
+parse_proof_body :: [Token] -> Either String ([Token], [Stmt])
+parse_proof_body tokens = case (parse_stmt tokens) of
+                            Left l -> Left l
+                            Right (Symbol "qed":tokens', stmt) -> Right (Symbol "qed":tokens', [stmt])
+                            Right (tokens', stmt) -> case (parse_proof_body tokens') of
+                                Left l -> Left l
+                                Right (tokens'', stmts) -> Right (tokens'', (stmt:stmts))
 
 parse_stmt :: [Token] -> Either String ([Token], Stmt)
 parse_stmt (Symbol "axiom":Symbol s:rest) = Right (rest, Axiom s)
@@ -62,6 +69,7 @@ parse_stmt (Symbol "expect":tokens) = do
     (tokens', seq) <- Sequent.parse_prefix tokens
     return (tokens', Expect seq)
 parse_stmt [] = Left "no statement found"
+parse_stmt rem = Left $ "could not make sense of: " ++ (show rem)
 
 -- theorem silly-axiom
 -- system G3ip
