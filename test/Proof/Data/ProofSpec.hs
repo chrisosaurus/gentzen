@@ -147,6 +147,20 @@ spec = do
       let expected   = Right [0, 1, 2, 3]
       tipN 4 expression `shouldBe` expected
 
+    it "get failure" $ do
+      let expression = start (Sequent [] [])
+      let expected   = Left "Error: sequent with ID '1' not found."
+      get 1 expression `shouldBe` expected
+
+    it "get success" $ do
+      let sequents   = [ Sequent [Symbol "one"] []
+                       , Sequent [Symbol "two"] []
+                       , Sequent [Symbol "three"] []
+                       ]
+      let expression = addSeqs' sequents $ start (Sequent [] [])
+      let expected   = Right $ Sequent [Symbol "two"] []
+      get 2 expression `shouldBe` expected
+
 main :: IO ()
 main = hspec spec
 

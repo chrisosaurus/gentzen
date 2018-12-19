@@ -15,6 +15,7 @@ module Proof.Data.Proof
     abortSeq,
     tip,
     tipN,
+    get,
 )
 where
 
@@ -126,4 +127,10 @@ tipN n Proof { unproven } = if (length unproven) >= n
     else Left  $ "Error: wanted '" ++ (show n) ++
                  "' but only had '" ++ (show (length unproven)) ++
                  "' unproven sequents."
+
+get :: ID -> Proof -> Either String Sequent
+get id Proof { sequents } = case Map.lookup id sequents of
+    Nothing -> Left $ "Error: sequent with ID '" ++ (show id) ++ "' not found."
+    Just s  -> Right s
+
 
