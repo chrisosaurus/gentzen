@@ -96,6 +96,22 @@ spec = do
       let expression = "∃"
       let expected = Right [Exists]
       lexer expression `shouldBe` expected
+    it "bottom _" $ do
+      let expression = "_"
+      let expected = Right [Bottom]
+      lexer expression `shouldBe` expected
+    it "bottom bottom" $ do
+      let expression = "bottom"
+      let expected = Right [Bottom]
+      lexer expression `shouldBe` expected
+    it "plus" $ do
+      let expression = "+"
+      let expected = Right [Plus]
+      lexer expression `shouldBe` expected
+    it "minus" $ do
+      let expression = "-"
+      let expected = Right [Minus]
+      lexer expression `shouldBe` expected
 
   describe "compound lexer tests" $ do
     it "simple and" $ do

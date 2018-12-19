@@ -25,6 +25,8 @@ data Token = Turnstyle
            | Bottom
            | Forall
            | Exists
+           | Plus
+           | Minus
     deriving (Eq)
 
 stringify :: Token -> String
@@ -41,8 +43,10 @@ stringify LSquare = "["
 stringify RSquare = "]"
 stringify (Symbol s) = s
 stringify Bottom  = "_"
-stirngify Forall = "forall"
-stirngify Exists = "exists"
+stringify Forall = "forall"
+stringify Exists = "exists"
+stringify Plus = "+"
+stringify Minus = "-"
 
 instance Show Token where
   show token = stringify token
@@ -71,6 +75,8 @@ lexer string                 =
                         , lexer_rcurly string
                         , lexer_lsquare string
                         , lexer_rsquare string
+                        , lexer_plus string
+                        , lexer_minus string
                         , lexer_symbol string
                         ]
 
@@ -80,6 +86,7 @@ trim_space str = str
 
 lexer_bottom :: String -> Maybe(Token, String)
 lexer_bottom ('_':rest) = Just (Bottom, rest)
+lexer_bottom ('b':'o':'t':'t':'o':'m':rest) = Just (Bottom, rest)
 lexer_bottom _          = Nothing
 
 lexer_forall :: String -> Maybe(Token, String)
@@ -144,6 +151,14 @@ lexer_lsquare _          = Nothing
 lexer_rsquare :: String -> Maybe(Token, String)
 lexer_rsquare (']':rest) = Just (RSquare, rest)
 lexer_rsquare _          = Nothing
+
+lexer_plus :: String -> Maybe(Token, String)
+lexer_plus ('+':rest) = Just (Plus, rest)
+lexer_plus _          = Nothing
+
+lexer_minus :: String -> Maybe(Token, String)
+lexer_minus ('-':rest) = Just (Minus, rest)
+lexer_minus _          = Nothing
 
 lexer_symbol :: String -> Maybe (Token, String)
 lexer_symbol string = lexer_symbol' string ""
