@@ -28,8 +28,12 @@ run sy th = do
     return (str, st)
 
 run' :: System -> [Sequent] -> [Stmt] -> Either String ([String], [(Sequent, SequentTree)])
-run' _      _    []           = do
-    return ([], [])
+--          empty sequents and stms means this subproof is done
+run' _      []    []          = Right ([], [])
+-- if we have no more statements but still have sequents,
+-- then we failed to discharge all our proof obligations
+run' _      seqs    []        = Left $
+    "Failed to discharge remaining proof obligations: " ++ (show seqs)
 run' system seqs (stmt:stmts) = case stmt of
     Branch lstmts rstmts -> do
         (lseq, rseq)<- expect_double seqs
