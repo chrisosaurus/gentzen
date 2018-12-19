@@ -37,6 +37,23 @@ spec = do
                                      , steps   = [ Axiom "a" ]
                                      }
       parse expression `shouldBe` expected
+    it "expect" $ do
+      let expression = [ Symbol "theorem", Symbol "silly-axiom"
+                       , Symbol "system",  Symbol "G3ip"
+                       , Symbol "sequent"
+                           , Symbol "a", Turnstyle, Symbol "a"
+                       , Symbol "proof"
+                           , Symbol "expect", Symbol "a", Turnstyle, Symbol "a"
+                       , Symbol "qed"
+                       ]
+      let expected = Right $ Theorem { name    = "silly-axiom"
+                                     , system  = "G3ip"
+                                     , sequent = Sequent.Sequent [Sequent.Symbol "a"] [Sequent.Symbol "a"]
+                                     , steps   = [ Expect (Sequent.Sequent [Sequent.Symbol "a"] [Sequent.Symbol "a"]) ]
+                                     }
+      parse expression `shouldBe` expected
+
+
 
 main :: IO ()
 main = hspec spec

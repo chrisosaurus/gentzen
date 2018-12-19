@@ -58,6 +58,9 @@ parse_proof tokens = do
 
 parse_stmt :: [Token] -> Either String ([Token], Stmt)
 parse_stmt (Symbol "axiom":Symbol s:rest) = Right (rest, Axiom s)
+parse_stmt (Symbol "expect":tokens) = do
+    (tokens', seq) <- Sequent.parse_prefix tokens
+    return (tokens', Expect seq)
 parse_stmt [] = Left "no statement found"
 
 -- theorem silly-axiom

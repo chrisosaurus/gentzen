@@ -10,6 +10,7 @@ import Sequent.Data.Sequent
 data Stmt = Axiom String
           -- Substeps are a bracketed subproof
           | Substeps [Stmt]
+          | Expect Sequent
     deriving (Show, Eq)
 
 -- theorem silly-axiom
