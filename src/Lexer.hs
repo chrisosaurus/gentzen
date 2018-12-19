@@ -18,6 +18,8 @@ data Token = Turnstyle
            | RParen
            | LCurly
            | RCurly
+           | LSquare
+           | RSquare
            | Symbol String
     deriving (Show, Eq)
 
@@ -38,8 +40,10 @@ lexer string                 =
                         , lexer_or string
                         , lexer_lparen string
                         , lexer_rparen string
+                        , lexer_lcurly string
                         , lexer_rcurly string
-                        , lexer_rcurly string
+                        , lexer_lsquare string
+                        , lexer_rsquare string
                         , lexer_symbol string
                         ]
 
@@ -85,6 +89,14 @@ lexer_lcurly _          = Nothing
 lexer_rcurly :: String -> Maybe(Token, String)
 lexer_rcurly ('}':rest) = Just (RCurly, rest)
 lexer_rcurly _          = Nothing
+
+lexer_lsquare :: String -> Maybe(Token, String)
+lexer_lsquare ('[':rest) = Just (LSquare, rest)
+lexer_lsquare _          = Nothing
+
+lexer_rsquare :: String -> Maybe(Token, String)
+lexer_rsquare (']':rest) = Just (RSquare, rest)
+lexer_rsquare _          = Nothing
 
 lexer_symbol :: String -> Maybe (Token, String)
 lexer_symbol string = lexer_symbol' string ""

@@ -77,16 +77,16 @@ spec = do
 
   describe "lexer error handling" $ do
     it "unknown char" $ do
-      let expression = "["
-      let expected = Left "Failed to parse: ["
+      let expression = "!"
+      let expected = Left "Failed to parse: !"
       lexer expression `shouldBe` expected
     it "spaces" $ do
-      let expression = "  ["
-      let expected = Left "Failed to parse: ["
+      let expression = "  !"
+      let expected = Left "Failed to parse: !"
       lexer expression `shouldBe` expected
     it "invalid symbol" $ do
-      let expression = "he]"
-      let expected = Left "Failed to parse: ]"
+      let expression = "he!"
+      let expected = Left "Failed to parse: !"
       lexer expression `shouldBe` expected
 
 main :: IO ()

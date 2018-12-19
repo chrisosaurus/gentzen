@@ -7,9 +7,10 @@ where
 
 import Sequent.Data.Sequent
 
-data Stmt = Axiom String
+data Stmt = Substeps [Stmt]
+          -- apply a named rewrite rule with arguments
+          | Apply String [Exp]
           -- Substeps are a bracketed subproof
-          | Substeps [Stmt]
           | Expect Sequent
           | Print
           | Abort
@@ -19,7 +20,7 @@ data Stmt = Axiom String
 -- system G3ip
 -- sequent a |- a
 -- proof
---   axiom a
+--   apply axiom [ a ]
 -- qed
 
 data Theorem = Theorem

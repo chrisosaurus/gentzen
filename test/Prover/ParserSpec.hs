@@ -28,13 +28,13 @@ spec = do
                        , Symbol "sequent"
                            , Symbol "a", Turnstyle, Symbol "a"
                        , Symbol "proof"
-                           , Symbol "axiom", Symbol "a"
+                           , Symbol "apply", Symbol "axiom", LSquare, Symbol "a", RSquare
                        , Symbol "qed"
                        ]
       let expected = Right $ Theorem { name    = "silly-axiom"
                                      , system  = "G3ip"
                                      , sequent = Sequent.Sequent [Sequent.Symbol "a"] [Sequent.Symbol "a"]
-                                     , steps   = [ Axiom "a" ]
+                                     , steps   = [ Apply "axiom" [Sequent.Symbol "a"] ]
                                      }
       parse expression `shouldBe` expected
     it "expect" $ do
@@ -60,7 +60,7 @@ spec = do
                        , Symbol "proof"
                            , Symbol "print"
                            , Symbol "expect", Symbol "a", Turnstyle, Symbol "a"
-                           , Symbol "axiom",  Symbol "a"
+                           , Symbol "apply", Symbol "axiom",  LSquare, Symbol "a", RSquare
                            , Symbol "abort"
                        , Symbol "qed"
                        ]
@@ -69,7 +69,7 @@ spec = do
                                      , sequent = Sequent.Sequent [Sequent.Symbol "a"] [Sequent.Symbol "a"]
                                      , steps   = [ Print
                                                  , Expect (Sequent.Sequent [Sequent.Symbol "a"] [Sequent.Symbol "a"])
-                                                 , Axiom "a"
+                                                 , Apply "axiom" [Sequent.Symbol "a"]
                                                  , Abort
                                                  ]
                                      }

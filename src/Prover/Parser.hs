@@ -13,6 +13,10 @@ consume_symbol :: String -> [Token] -> Either String [Token]
 consume_symbol exp (Symbol sym:rest) | exp == sym = Right rest
 consume_symbol exp _ = Left $ "Symbol not found: " ++ (show exp)
 
+consume_token :: Token -> [Token] -> Either String [Token]
+consume_token exp (tok:rest) | exp == tok = Right rest
+consume_token exp _ = Left $ "Token not found: " ++ (show exp)
+
 expect_empty :: [Token] -> Either String [Token]
 expect_empty [] = Right []
 expect_empty rem = Left $ "Expected empty: " ++ (show rem)
@@ -66,10 +70,15 @@ parse_proof_body tokens = case (parse_stmt tokens) of
 parse_stmt :: [Token] -> Either String ([Token], Stmt)
 parse_stmt (Symbol "print":rest) = Right (rest, Print)
 parse_stmt (Symbol "abort":rest) = Right (rest, Abort)
-parse_stmt (Symbol "axiom":Symbol s:rest) = Right (rest, Axiom s)
 parse_stmt (Symbol "expect":tokens) = do
     (tokens', seq) <- Sequent.parse_prefix tokens
     return (tokens', Expect seq)
+parse_stmt (Symbol "apply":Symbol name:LSquare:RSquare:tokens) = do
+    return (tokens, Apply name [])
+parse_stmt (Symbol "apply":Symbol name:LSquare:tokens) = do
+    (tokens', arguments) <- Sequent.parse_commalist tokens
+    tokens'' <- consume_token RSquare tokens'
+    return (tokens'', Apply name arguments)
 parse_stmt [] = Left "no statement found"
 parse_stmt rem = Left $ "could not make sense of: " ++ (show rem)
 

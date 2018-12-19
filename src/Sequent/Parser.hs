@@ -2,6 +2,8 @@ module Sequent.Parser
 (
     parse,
     parse_prefix,
+    parse_exp,
+    parse_commalist,
 )
 where
 
@@ -44,7 +46,6 @@ parse_commalist toks = case (parse_exp toks) of
                             Right (Comma:toks', exp) -> case (parse_commalist toks') of
                                                             Left l -> Left l
                                                             Right (toks'', exp') -> Right (toks'', (exp:exp'))
-                            Right (Turnstyle:toks', exp) -> Right (Turnstyle:toks', [exp])
                             Right (toks, exp) -> Right (toks, [exp])
 
 parse_exp :: [Token] -> Either String ([Token], Sequent.Exp)
