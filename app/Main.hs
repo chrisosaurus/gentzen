@@ -11,4 +11,6 @@ main = do
     work <- attemptParsing tokens
     putStrLn "Parsing results:"
     putStrLn $ show work
+    attemptCheck work
+    putStrLn "check successful"
 

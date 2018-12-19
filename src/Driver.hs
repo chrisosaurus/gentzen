@@ -4,6 +4,7 @@ module Driver
     readFileArgument,
     attemptLexing,
     attemptParsing,
+    attemptCheck,
 )
 where
 
@@ -37,4 +38,10 @@ attemptParsing tokens = do
     case (parse tokens) of
         Left l -> fail $ "Parsing failed: " ++ l
         Right r -> return r
+
+attemptCheck :: WorkUnit -> IO ()
+attemptCheck workunit = do
+    case (check workunit) of
+        Left l -> fail $ "Check failed: " ++ l
+        Right () -> return ()
 
