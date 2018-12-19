@@ -131,9 +131,6 @@ instantiate (Sequent.Implies l r) env = do
     l <- instantiate l env
     r <- instantiate r env
     return $ Sequent.Implies l r
-instantiate (Sequent.Bracketed i) env = do
-    i <- instantiate i env
-    return $ Sequent.Bracketed i
 instantiate Sequent.Bottom _ = Right Sequent.Bottom
 instantiate (Sequent.Symbol s) env = do
     val <- Env.get env s
@@ -179,8 +176,6 @@ destruct_arg (Sequent.Implies bl br) (Sequent.Implies al ar) = do
     right <- destruct_arg br ar
     env   <-  Env.merge left right
     return env
-destruct_arg (Sequent.Bracketed b) (Sequent.Bracketed a) = do
-    destruct_arg b a
 destruct_arg (Sequent.Symbol name) arg = do
     return $ Env.Env name [arg] Env.EnvEmpty
 destruct_arg Sequent.Bottom _ = Left "Apply error: bottom encountered as binding"

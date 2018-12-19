@@ -68,7 +68,7 @@ parse_single :: [Token] -> Either String ([Token], Sequent.Exp)
 parse_single (LParen:rest) = do
     (toks, inner) <- parse_exp rest
     toks <- consume_token RParen toks
-    return (toks, Sequent.Bracketed inner)
+    return (toks, inner)
 parse_single (Bottom:rest) = do
     return (rest, Sequent.Bottom)
 parse_single (Symbol s:rest) = Right $ (rest, Sequent.Symbol s)

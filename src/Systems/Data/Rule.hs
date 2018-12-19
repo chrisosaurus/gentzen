@@ -16,7 +16,6 @@ module Systems.Data.Rule
     split_exp,
     split_exp_lhs,
     split_exp_rhs,
-    unbracket,
 )
 where
 

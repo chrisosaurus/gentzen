@@ -58,16 +58,6 @@ spec = do
       let argument = Implies (Symbol "A") (Symbol "B")
       let expected = Right $ Env "a" [Symbol "A"] $ Env "b" [Symbol "B"] EnvEmpty
       destruct_arg binding argument `shouldBe` expected
-    it "destruct_arg bracketed" $ do
-      let binding  = Bracketed (Symbol "a")
-      let argument = Bracketed (Symbol "A")
-      let expected = Right $ Env "a" [Symbol "A"] EnvEmpty
-      destruct_arg binding argument `shouldBe` expected
-    it "destruct_arg bracketed" $ do
-      let binding  = Symbol "a"
-      let argument = Symbol "A"
-      let expected = Right $ Env "a" [Symbol "A"] EnvEmpty
-      destruct_arg binding argument `shouldBe` expected
 
   describe "destruct_args'" $ do
     it "destruct_args' 1" $ do

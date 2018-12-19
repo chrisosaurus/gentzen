@@ -94,7 +94,6 @@ extract_sequent_list_symbols exps = concat $ map extract_sequent_symbols exps
 extract_sequent_symbols :: Exp -> [String]
 extract_sequent_symbols Bottom        = []
 extract_sequent_symbols (Symbol s)    = [s]
-extract_sequent_symbols (Bracketed e) = extract_sequent_symbols e
 extract_sequent_symbols (And l r)     = (extract_sequent_symbols l) ++ (extract_sequent_symbols r)
 extract_sequent_symbols (Or l r)      = (extract_sequent_symbols l) ++ (extract_sequent_symbols r)
 extract_sequent_symbols (Implies l r) = (extract_sequent_symbols l) ++ (extract_sequent_symbols r)

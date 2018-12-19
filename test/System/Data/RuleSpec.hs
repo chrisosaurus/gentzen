@@ -19,20 +19,6 @@ import System.Data.Rule
 
 spec :: Spec
 spec = do
-  describe "unbracket function tests" $ do
-    it "unbracket noop" $ do
-      let expression = unbracket (Symbol "a")
-      let expected = (Symbol "a")
-      expression `shouldBe` expected
-    it "unbracket many" $ do
-      let expression = unbracket $ Bracketed $ Bracketed $ Bracketed $ Symbol "a"
-      let expected = (Symbol "a")
-      expression `shouldBe` expected
-    it "unbracket rule" $ do
-      let expression = unbracket $ Bracketed $ Bracketed $ Implies (Bracketed (Symbol "a")) (Bracketed (Symbol "b"))
-      let expected = Implies (Bracketed (Symbol "a")) (Bracketed (Symbol "b"))
-      expression `shouldBe` expected
-
   describe "remove_exp tests" $ do
     it "remove_exp error" $ do
       let expression = remove_exp (Symbol "a") []

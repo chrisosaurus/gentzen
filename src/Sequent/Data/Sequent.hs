@@ -8,7 +8,6 @@ where
 data Exp = And       Exp Exp
          | Or        Exp Exp
          | Implies   Exp Exp
-         | Bracketed Exp
          | Symbol    String
          | Bottom
     deriving (Eq)
@@ -20,7 +19,6 @@ instance Show Exp where
     show (And l r)     = (show l) ++ "^"  ++ (show r)
     show (Or l r)      = (show l) ++ "v"  ++ (show r)
     show (Implies l r) = (show l) ++ "->" ++ (show r)
-    show (Bracketed e) = "(" ++ (show e) ++ ")"
     show (Symbol s)    = s
     show (Bottom)      = "_"
 

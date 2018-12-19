@@ -38,19 +38,19 @@ spec = do
       let expression = [ Symbol "a", Turnstyle
                        , LParen, LParen, Symbol "a", RParen, RParen
                        ]
-      let expected = Right $ Sequent.Sequent [Sequent.Symbol "a"] [Sequent.Bracketed (Sequent.Bracketed (Sequent.Symbol "a"))]
+      let expected = Right $ Sequent.Sequent [Sequent.Symbol "a"] [Sequent.Symbol "a"]
       parse expression `shouldBe` expected
     it "brackets and operators 1" $ do
       let expression = [ Symbol "a", Comma, Symbol "b", Turnstyle
                        , LParen, LParen, Symbol "a", RParen, And, Symbol "b" , RParen
                        ]
-      let expected = Right $ Sequent.Sequent [Sequent.Symbol "a", Sequent.Symbol "b"] [Sequent.Bracketed (Sequent.And (Sequent.Bracketed (Sequent.Symbol "a")) (Sequent.Symbol "b"))]
+      let expected = Right $ Sequent.Sequent [Sequent.Symbol "a", Sequent.Symbol "b"] [Sequent.And (Sequent.Symbol "a") (Sequent.Symbol "b")]
       parse expression `shouldBe` expected
     it "brackets and operators 2" $ do
       let expression = [ Symbol "a", Comma, Symbol "b", Turnstyle
                        , LParen, Symbol "a", And, Symbol "b" , RParen
                        ]
-      let expected = Right $ Sequent.Sequent [Sequent.Symbol "a", Sequent.Symbol "b"] [Sequent.Bracketed (Sequent.And (Sequent.Symbol "a") (Sequent.Symbol "b"))]
+      let expected = Right $ Sequent.Sequent [Sequent.Symbol "a", Sequent.Symbol "b"] [Sequent.And (Sequent.Symbol "a") (Sequent.Symbol "b")]
       parse expression `shouldBe` expected
 
     it "hypothetical syllogism" $ do
@@ -64,10 +64,10 @@ spec = do
                        , LParen, Symbol "a", Implies, Symbol "c", RParen
                        ]
       let rexp = Sequent.Implies
-                (Sequent.Bracketed (Sequent.And
-                    (Sequent.Bracketed (Sequent.Implies (Sequent.Symbol "a") (Sequent.Symbol "b")))
-                    (Sequent.Bracketed (Sequent.Implies (Sequent.Symbol "b") (Sequent.Symbol "c")))))
-                (Sequent.Bracketed (Sequent.Implies (Sequent.Symbol "a") (Sequent.Symbol "c")))
+                (Sequent.And
+                    (Sequent.Implies (Sequent.Symbol "a") (Sequent.Symbol "b"))
+                    (Sequent.Implies (Sequent.Symbol "b") (Sequent.Symbol "c")))
+                (Sequent.Implies (Sequent.Symbol "a") (Sequent.Symbol "c"))
       let expected = Right $ Sequent.Sequent [] [rexp]
       parse expression `shouldBe` expected
 
