@@ -158,6 +158,7 @@ addStep step Proof { sequents
                     Axiom    id _ _     -> id
                     Straight id _ _ _   -> id
                     Split    id _ _ _ _ -> id
+                    Abort    id         -> id
 
 abortSeq :: ID -> Proof -> Proof
 abortSeq id Proof { sequents
