@@ -71,10 +71,3 @@ parse_stmt (Symbol "expect":tokens) = do
 parse_stmt [] = Left "no statement found"
 parse_stmt rem = Left $ "could not make sense of: " ++ (show rem)
 
--- theorem silly-axiom
--- system G3ip
--- sequent a |- a
--- proof
---   axiom a
--- qed
-

@@ -1,0 +1,7 @@
+theorem silly-axiom
+system G3ip
+sequent a |- a
+proof
+    expect a |- a
+    axiom a
+qed
