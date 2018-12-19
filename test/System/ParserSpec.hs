@@ -142,12 +142,8 @@ spec = do
                          , Symbol "R", Minus, LParen, Symbol "a", And, Symbol "b", RParen
                        , RParen
                        ]
-      let lexpl = Expr "L" [Add (Sequent.Symbol "a")]
-      let lexpr = Expr "R" [Remove (Sequent.And (Sequent.Symbol "a") (Sequent.Symbol "b"))]
-      let lexp = Sequ lexpl lexpr
-      let rexpl = Expr "L" [Add (Sequent.Symbol "b")]
-      let rexpr = Expr "R" [Remove (Sequent.And (Sequent.Symbol "a") (Sequent.Symbol "b"))]
-      let rexp = Sequ rexpl rexpr
+      let lexp = Sequ (Expr "L" [Add (Sequent.Symbol "a")]) (Expr "R" [Remove (Sequent.And (Sequent.Symbol "a") (Sequent.Symbol "b"))])
+      let rexp = Sequ (Expr "L" [Add (Sequent.Symbol "b")]) (Expr "R" [Remove (Sequent.And (Sequent.Symbol "a") (Sequent.Symbol "b"))])
       let expected = Right $ ([], Rule { rule_name = "right_and"
                                        , args = [ (Sequent.And (Sequent.Symbol "a") (Sequent.Symbol "b")) ]
                                        , left_name = "L"
