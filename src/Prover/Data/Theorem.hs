@@ -11,6 +11,7 @@ data Stmt = Axiom String
           -- Substeps are a bracketed subproof
           | Substeps [Stmt]
           | Expect Sequent
+          | Print
     deriving (Show, Eq)
 
 -- theorem silly-axiom

@@ -52,12 +52,13 @@ spec = do
                                      , steps   = [ Expect (Sequent.Sequent [Sequent.Symbol "a"] [Sequent.Symbol "a"]) ]
                                      }
       parse expression `shouldBe` expected
-    it "expect and axiom" $ do
+    it "all commands" $ do
       let expression = [ Symbol "theorem", Symbol "silly-axiom"
                        , Symbol "system",  Symbol "G3ip"
                        , Symbol "sequent"
                            , Symbol "a", Turnstyle, Symbol "a"
                        , Symbol "proof"
+                           , Symbol "print"
                            , Symbol "expect", Symbol "a", Turnstyle, Symbol "a"
                            , Symbol "axiom",  Symbol "a"
                        , Symbol "qed"
@@ -65,7 +66,8 @@ spec = do
       let expected = Right $ Theorem { name    = "silly-axiom"
                                      , system  = "G3ip"
                                      , sequent = Sequent.Sequent [Sequent.Symbol "a"] [Sequent.Symbol "a"]
-                                     , steps   = [ Expect (Sequent.Sequent [Sequent.Symbol "a"] [Sequent.Symbol "a"])
+                                     , steps   = [ Print
+                                                 , Expect (Sequent.Sequent [Sequent.Symbol "a"] [Sequent.Symbol "a"])
                                                  , Axiom "a"
                                                  ]
                                      }

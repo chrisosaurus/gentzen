@@ -64,6 +64,7 @@ parse_proof_body tokens = case (parse_stmt tokens) of
                                 Right (tokens'', stmts) -> Right (tokens'', (stmt:stmts))
 
 parse_stmt :: [Token] -> Either String ([Token], Stmt)
+parse_stmt (Symbol "print":rest) = Right (rest, Print)
 parse_stmt (Symbol "axiom":Symbol s:rest) = Right (rest, Axiom s)
 parse_stmt (Symbol "expect":tokens) = do
     (tokens', seq) <- Sequent.parse_prefix tokens
