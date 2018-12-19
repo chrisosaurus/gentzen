@@ -8,10 +8,7 @@ module Driver
 where
 
 import System.Environment (getArgs)
-import Data.Token
-import Lexer (lexer)
-import Gentzen.Parser (parse)
-import Gentzen.Data.WorkUnit
+import Lib
 
 -- attempt to get a filename provided as an argument
 getFilename :: IO String
