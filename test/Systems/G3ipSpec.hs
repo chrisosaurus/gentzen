@@ -1,4 +1,4 @@
-module System.Systems.G3ipSpec
+module Systems.G3ipSpec
 (
     main,
     spec,
@@ -8,8 +8,8 @@ where
 import Test.Hspec
 
 import Sequent.Data.Sequent
-import System.Data.Rule
-import System.Systems.G3ip
+import Systems.Data.Rule
+import Systems.G3ip
 
 spec :: Spec
 spec = do

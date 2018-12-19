@@ -1,4 +1,4 @@
-module System.Systems.G3ip
+module Systems.G3ip
 (
     axiom,
     left_and,
@@ -14,8 +14,8 @@ module System.Systems.G3ip
 where
 
 import Sequent.Data.Sequent
-import System.Data.Rule
-import System.Data.System
+import Systems.Data.Rule
+import Systems.Data.System
 
 axiom :: Rule
 axiom = Axiom "axiom" axiom'
