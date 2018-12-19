@@ -39,7 +39,31 @@ data Proof = Proof { sequents :: Map.Map ID Sequent
                    , aborted  :: Set.Set ID
                    , nextId   :: ID
                    }
-    deriving (Show, Eq)
+    deriving (Eq)
+
+instance Show Proof where
+    show Proof { sequents
+               , steps
+               , unproven
+               , aborted
+               , nextId
+               } =   "\tunproven: "  ++ (show unproven)                           ++
+                   "\n\taborted:  "  ++ (show (Set.toList aborted))               ++
+                   "\n\tsequents:"   ++ (showSeqs  (Map.toList sequents))         ++
+                   "\n\tsteps:"      ++ (showSteps (Map.toList steps))            ++
+                   "\n"
+
+showSeqs  :: [(ID, Sequent)] -> String
+showSeqs [] = ""
+showSeqs ((id, seq):xs) = this ++ rest
+    where this = "\n\t\t" ++ (show id) ++ ":" ++ (show seq)
+          rest = showSeqs xs
+
+showSteps :: [(ID, Step)] -> String
+showSteps [] = ""
+showSteps ((id, step):xs) = this ++ rest
+    where this = "\n\t\t" ++ (show id) ++ ":" ++ (show step)
+          rest = showSteps xs
 
 start :: Sequent -> Proof
 start seq = Proof { sequents = Map.singleton goal_id seq
