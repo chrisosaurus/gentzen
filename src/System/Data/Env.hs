@@ -5,6 +5,7 @@ module System.Data.Env
     get,
     insert,
     remove,
+    merge,
 )
 where
 
@@ -38,3 +39,9 @@ remove (Env s e rest) str             = do
     rest <- remove rest str
     return (Env s e rest)
 
+merge :: Env -> Env -> Either String Env
+merge (Env s e rest) right | exists right s = Left $ "Env.merge: duplicate key '" ++ s ++ "'."
+merge (Env s e rest) right = do
+    rest <- merge rest right
+    return $ Env s e rest
+merge EnvEmpty right = Right right

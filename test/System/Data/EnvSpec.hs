@@ -48,6 +48,11 @@ spec = do
       let expression = Env "a" (Symbol "aval") (Env "b" (Symbol "bval") EnvEmpty)
       let expected = Right $ Env "a" (Symbol "aval") EnvEmpty
       remove expression "b" `shouldBe` expected
+    it "merge duplicate" $ do
+      let left   = Env "a" (Symbol "aval") (Env "b" (Symbol "bval") EnvEmpty)
+      let right  = Env "c" (Symbol "cval") (Env "d" (Symbol "dval") EnvEmpty)
+      let expected = Right $ Env "a" (Symbol "aval") $ Env "b" (Symbol "bval") $ Env "c" (Symbol "cval") $ Env "d" (Symbol "dval") EnvEmpty
+      merge left right `shouldBe` expected
 
 
   describe "env error cases" $ do
@@ -71,6 +76,11 @@ spec = do
       let expression = Env "a" Bottom (Env "b" Bottom EnvEmpty)
       let expected = Left "Env.remove: environment did not contain 'q'."
       remove expression "q" `shouldBe` expected
+    it "merge duplicate" $ do
+      let left  = Env "b" Bottom (Env "a" Bottom EnvEmpty)
+      let right = Env "c" Bottom (Env "b" Bottom EnvEmpty)
+      let expected = Left "Env.merge: duplicate key 'b'."
+      merge left right `shouldBe` expected
 
 
 main :: IO ()
