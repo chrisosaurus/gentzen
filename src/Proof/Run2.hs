@@ -1,6 +1,8 @@
 module Proof.Run2
 (
     run,
+    run',
+    step,
 )
 where
 
@@ -35,11 +37,14 @@ run sy th = do
 
 run' :: System -> Proof.Proof -> [Stmt] -> Either String ([String], Proof.Proof)
 run' _  proof [] = Right ([], proof)
-run' sy proof (stmt:stmts) = case stmt of
+run' sy proof (stmt:stmts) = do
+    (strs,  proof) <- step sy proof stmt
+    (strs', proof) <- run' sy proof stmts
+    return (strs++strs', proof)
+
+step :: System -> Proof.Proof -> Stmt -> Either String ([String], Proof.Proof)
+step sy proof stmt = case stmt of
     Branch lstmts rstmts -> do
-        -- branch should mean we have no remaining stmts
-        -- TODO FIXME make the error message here prettier
-        []             <- return stmts
         (lstrs, proof) <- run' sy proof lstmts
         (rstrs, proof) <- run' sy proof rstmts
         return (lstrs ++ rstrs, proof)
@@ -56,25 +61,21 @@ run' sy proof (stmt:stmts) = case stmt of
             x:y:[] -> Right $ Proof.Split    id name args x y
             _      -> Left $ "Error: too many ids, found '" ++ (show (length ids)) ++ "'"
         proof         <- return $ Proof.addStep step proof
-        run' sy proof stmts
+        return ([], proof)
 
     Expect sexp -> do
         id  <- Proof.tip proof
         seq <- Proof.get id proof
         ()  <- expect sexp seq
-        run' sy proof stmts
+        return ([], proof)
 
     Print -> do
         id            <- Proof.tip proof
         seq           <- Proof.get id proof
         str           <- return $ show seq
-        (strs, proof) <- run' sy proof stmts
-        return (str:strs, proof)
+        return ([str], proof)
 
     Abort -> do
-        -- abort should mean we have no remaining stmts
-        -- TODO FIXME make the error message here prettier
-        []    <- return stmts
         id    <- Proof.tip proof
         proof <- return $ Proof.abortSeq id proof
         step  <- return $ Proof.Abort id
