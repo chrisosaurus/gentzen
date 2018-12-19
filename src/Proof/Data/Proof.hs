@@ -8,8 +8,13 @@ module Proof.Data.Proof
     start,
     finished,
     addSeq,
+    addSeq',
+    addSeqs,
+    addSeqs',
     addStep,
     abortSeq,
+    tip,
+    tipN,
 )
 where
 
@@ -62,6 +67,19 @@ addSeq seq Proof { sequents
                            , nextId   = id+ 1
                            }
 
+addSeq' :: Sequent -> Proof -> Proof
+addSeq' seq proof = newProof
+    where (ids, newProof) = addSeq seq proof
+
+addSeqs :: [Sequent] -> Proof -> ([ID], Proof)
+addSeqs [] proof = ([], proof)
+addSeqs (seq:seqs) proof = (id:ids, finalProof)
+    where (id, newProof)    = addSeq seq proof
+          (ids, finalProof) = addSeqs seqs newProof
+
+addSeqs' :: [Sequent] -> Proof -> Proof
+addSeqs' seqs proof = newProof
+    where (ids, newProof) = addSeqs seqs proof
 
 addStep :: Step -> Proof -> Proof
 addStep step Proof { sequents
@@ -94,4 +112,18 @@ abortSeq id Proof { sequents
                            , aborted  = Set.insert id aborted
                            , nextId
                            }
+
+tip :: Proof -> Either String ID
+tip Proof { unproven = []    } =
+    Left "Error: wanted '1' but only had '0' unproven sequents."
+tip Proof { unproven = (x:_) } = Right x
+
+-- I wish this could be Word -> Proof -> Either String [ID], but I don't want to pay
+-- for conversion.
+tipN :: Int -> Proof -> Either String [ID]
+tipN n Proof { unproven } = if (length unproven) >= n
+    then Right $ reverse $ take n unproven
+    else Left  $ "Error: wanted '" ++ (show n) ++
+                 "' but only had '" ++ (show (length unproven)) ++
+                 "' unproven sequents."
 
