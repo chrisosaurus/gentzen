@@ -93,7 +93,7 @@ spec = do
                         , props = []
                         , body = Unit
                         }
-      let expected = Left $ "in rule 'repeating argument': argument 'a' is repeated."
+      let expected = Left $ "in rule 'repeating argument' arguments: 'a' is repeated."
       check_rule system `shouldBe` expected
 
     it "repeated argument error 2" $ do
@@ -104,7 +104,7 @@ spec = do
                         , props = []
                         , body = Unit
                         }
-      let expected = Left $ "in rule 'repeating argument': argument 'a' is repeated."
+      let expected = Left $ "in rule 'repeating argument' arguments: 'a' is repeated."
       check_rule system `shouldBe` expected
 
     it "repeated argument error 3" $ do
@@ -115,7 +115,7 @@ spec = do
                         , props = []
                         , body = Unit
                         }
-      let expected = Left $ "in rule 'repeating argument': argument 'b' is repeated."
+      let expected = Left $ "in rule 'repeating argument' arguments: 'b' is repeated."
       check_rule system `shouldBe` expected
 
     it "repeated sequent name error" $ do
@@ -126,7 +126,7 @@ spec = do
                         , props = []
                         , body = Unit
                         }
-      let expected = Left $ "in rule 'repeating sequent name': argument 'L' is repeated."
+      let expected = Left $ "in rule 'repeating sequent name' arguments: 'L' is repeated."
       check_rule system `shouldBe` expected
 
     it "non unique sequent name error" $ do
@@ -137,7 +137,7 @@ spec = do
                         , props = []
                         , body = Unit
                         }
-      let expected = Left $ "in rule 'non-unique sequent name': argument 'a' is repeated."
+      let expected = Left $ "in rule 'non-unique sequent name' arguments: 'a' is repeated."
       check_rule system `shouldBe` expected
 
     it "left undefined symbol in prop" $ do
@@ -148,7 +148,7 @@ spec = do
                         , props = [In "b" "L"]
                         , body = Unit
                         }
-      let expected = Left $ "in rule 'left undefined prop symbol': symbol 'b' used in rewrite rule but not defined."
+      let expected = Left $ "in rule 'left undefined prop symbol' propositions: 'b' used but not defined."
       check_rule system `shouldBe` expected
 
     it "right undefined symbol in prop" $ do
@@ -159,7 +159,7 @@ spec = do
                         , props = [In "a" "M"]
                         , body = Unit
                         }
-      let expected = Left $ "in rule 'right undefined prop symbol': symbol 'M' used in rewrite rule but not defined."
+      let expected = Left $ "in rule 'right undefined prop symbol' propositions: 'M' used but not defined."
       check_rule system `shouldBe` expected
 
     it "undefined symbol in body 1" $ do
@@ -173,7 +173,7 @@ spec = do
                         , props = []
                         , body = body
                         }
-      let expected = Left $ "in rule 'test': symbol 'e' used in rewrite rule but not defined."
+      let expected = Left $ "in rule 'test' rewrite rule: 'e' used but not defined."
       check_rule system `shouldBe` expected
 
     it "undefined symbol in body 2" $ do
@@ -187,7 +187,7 @@ spec = do
                         , props = []
                         , body = body
                         }
-      let expected = Left $ "in rule 'test': symbol 'e' used in rewrite rule but not defined."
+      let expected = Left $ "in rule 'test' rewrite rule: 'e' used but not defined."
       check_rule system `shouldBe` expected
 
     it "undefined symbol in body 3" $ do
@@ -201,7 +201,7 @@ spec = do
                         , props = []
                         , body = body
                         }
-      let expected = Left $ "in rule 'test': symbol 'e' used in rewrite rule but not defined."
+      let expected = Left $ "in rule 'test' rewrite rule: 'e' used but not defined."
       check_rule system `shouldBe` expected
 
     it "undefined symbol in body 4" $ do
@@ -220,7 +220,7 @@ spec = do
                         , props = []
                         , body = body
                         }
-      let expected = Left $ "in rule 'test': symbol 'e' used in rewrite rule but not defined."
+      let expected = Left $ "in rule 'test' rewrite rule: 'e' used but not defined."
       check_rule system `shouldBe` expected
 
     it "faulty left_and" $ do
@@ -238,7 +238,7 @@ spec = do
                         , props = []
                         , body = body
                         }
-      let expected = Left $ "in rule 'faulty left_and': symbol 'c' used in rewrite rule but not defined."
+      let expected = Left $ "in rule 'faulty left_and' rewrite rule: 'c' used but not defined."
       check_rule system `shouldBe` expected
 
     it "faulty right_and" $ do
@@ -255,7 +255,7 @@ spec = do
                         , props = []
                         , body = body
                         }
-      let expected = Left $ "in rule 'faulty right_and': symbol 'c' used in rewrite rule but not defined."
+      let expected = Left $ "in rule 'faulty right_and' rewrite rule: 'c' used but not defined."
       check_rule system `shouldBe` expected
 
 
