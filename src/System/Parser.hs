@@ -18,12 +18,20 @@ import Data.Semigroup ((<>))
 import qualified Sequent.Data.Sequent as Sequent
 import qualified Sequent.Parser as Sequent
 
+-- parse consumes all input and raises error if there is any left
 parse :: [Token] -> Either String System
 parse tokens = do
+    (tokens, system) <- parse_prefix tokens
+    [] <- expect_empty tokens
+    return system
+
+-- parse_prefix will greedily consume a system from the front, but leave the
+-- remaining tokens untouched
+parse_prefix :: [Token] -> Either String ([Token], System)
+parse_prefix tokens = do
     (tokens, name) <- parse_name tokens
     (tokens, rules) <- parse_rules tokens
-    [] <- expect_empty tokens
-    return $ System name rules
+    return (tokens, System name rules)
 
 parse_name :: [Token] -> Either String ([Token], String)
 parse_name tokens = do
