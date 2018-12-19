@@ -4,7 +4,7 @@ values bottom
 rules
     axiom         (a)    (L |- R) = [(a in L), (a in R)].()
     left_and      (a^b)  (L |- R) = L-(a^b)+a+b |- R
-    right_and     (a^b)  (L |- R) = (L+a |- r-(a^b)), (L+b |- R-(a^b))
+    right_and     (a^b)  (L |- R) = (L+a |- R-(a^b)), (L+b |- R-(a^b))
     left_or       (avb)  (L |- R) = (L-(avb)+a |- r), (L-(avb)+b |- R)
     right_or1     (avb)  (L |- R) = L |- R-(avb)+a
     right_or2     (avb)  (L |- R) = L |- R-(avb)+b
