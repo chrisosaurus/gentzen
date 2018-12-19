@@ -45,7 +45,7 @@ trim_space str = str
 
 lexer_bottom :: String -> Maybe(Token, String)
 lexer_bottom ('_':rest) = Just (Bottom, rest)
-lexer_bottom ('b':'o':'t':'t':'o':'m':rest) = Just (Bottom, rest)
+lexer_bottom ('B':'o':'t':'t':'o':'m':rest) = Just (Bottom, rest)
 lexer_bottom _          = Nothing
 
 lexer_forall :: String -> Maybe(Token, String)

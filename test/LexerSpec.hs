@@ -105,8 +105,8 @@ spec = do
       let expression = "_"
       let expected = Right [Bottom]
       lexer expression `shouldBe` expected
-    it "bottom bottom" $ do
-      let expression = "bottom"
+    it "bottom Bottom" $ do
+      let expression = "Bottom"
       let expected = Right [Bottom]
       lexer expression `shouldBe` expected
     it "plus" $ do
