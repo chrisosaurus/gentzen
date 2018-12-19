@@ -59,8 +59,8 @@ step sy proof stmt = case stmt of
             []     -> Right $ Proof.Axiom    id name args
             x:[]   -> Right $ Proof.Straight id name args x
             x:y:[] -> Right $ Proof.Split    id name args x y
-            _      -> Left $ "Error: too many ids, found '" ++ (show (length ids)) ++ "'"
-        proof         <- return $ Proof.addStep step proof
+            _      -> Left  $ "Error: too many ids, found '" ++ (show (length ids)) ++ "'"
+        proof  <- return $ Proof.addStep step proof
         return ([], proof)
 
     Expect sexp -> do
