@@ -1,6 +1,6 @@
 module System.Parser
 (
-    System.Parser.parse,
+    parse,
     parse_rule,
     parse_props,
     parse_prop,
