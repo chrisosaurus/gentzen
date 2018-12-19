@@ -127,9 +127,21 @@ spec = do
       lexer expression `shouldBe` expected
 
   describe "compound lexer tests" $ do
-    it "simple and" $ do
+    it "simple and 1" $ do
       let expression = "a ^ b"
       let expected = Right [Symbol "a", And, Symbol "b"]
+      lexer expression `shouldBe` expected
+    it "simple and 2" $ do
+      let expression = "a^b"
+      let expected = Right [Symbol "a", And, Symbol "b"]
+      lexer expression `shouldBe` expected
+    it "simple or 1" $ do
+      let expression = "a v b"
+      let expected = Right [Symbol "a", Or, Symbol "b"]
+      lexer expression `shouldBe` expected
+    it "simple or 2" $ do
+      let expression = "a∨b"
+      let expected = Right [Symbol "a", Or, Symbol "b"]
       lexer expression `shouldBe` expected
     it "implication" $ do
       let expression = "a -> b, b -> c |- a -> b"
