@@ -9,6 +9,7 @@ import qualified Sequent.Data.Sequent as Sequent
 import qualified Sequent.Parser as Sequent
 import Proof.Data.Theorem
 import ParserUtils
+import Data.Semigroup ((<>))
 
 parse :: [Token] -> Either String Theorem
 parse tokens = do
@@ -45,13 +46,26 @@ parse_proof tokens = do
     return (tokens, body)
 
 parse_proof_body :: [Token] -> Either String ([Token], [Stmt])
-parse_proof_body tokens = case (parse_stmt tokens) of
-                            Left l -> Left l
-                            Right (Symbol "qed":tokens', stmt) -> Right (Symbol "qed":tokens', [stmt])
-                            Right (RCurly:tokens', stmt) -> Right (RCurly:tokens', [stmt])
-                            Right (tokens', stmt) -> case (parse_proof_body tokens') of
-                                Left l -> Left l
-                                Right (tokens'', stmts) -> Right (tokens'', (stmt:stmts))
+parse_proof_body tokens = do
+    (tokens, stmt) <- parse_stmt tokens
+    (tokens, stmts) <- (qed tokens) <> (rcurly tokens) <> (more tokens)
+    return $ (tokens, (stmt:stmts))
+    where
+        -- stop if we find 'qed'
+        qed :: [Token] -> Either String ([Token], [Stmt])
+        qed tokens = do
+            tokens <- expect_token (Symbol "qed") tokens
+            return (tokens, [])
+        -- stop if we find '}'
+        rcurly :: [Token] -> Either String ([Token], [Stmt])
+        rcurly tokens = do
+            tokens <- expect_token (RCurly) tokens
+            return (tokens, [])
+        -- otherwise keep going
+        more :: [Token] -> Either String ([Token], [Stmt])
+        more tokens = do
+            (tokens, stmts) <- parse_proof_body tokens
+            return (tokens, stmts)
 
 parse_stmt :: [Token] -> Either String ([Token], Stmt)
 parse_stmt (LCurly:tokens) = do
