@@ -104,7 +104,7 @@ extract_props_symbols [] = []
 extract_props_symbols (x:xs) = (extract_prop_symbols x) ++ (extract_props_symbols xs)
 
 extract_prop_symbols :: Prop -> [String]
-extract_prop_symbols (In l r) = [l, r]
+extract_prop_symbols (In l r) = (extract_sequent_symbols l) ++ [r]
 
 extract_body_symbols :: Body -> [String]
 extract_body_symbols Unit = []

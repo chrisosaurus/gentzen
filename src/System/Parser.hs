@@ -128,11 +128,11 @@ parse_props_body tokens = do
 parse_prop :: [Token] -> Either String ([Token], Prop)
 parse_prop tokens = do
     tokens <- consume_token LParen tokens
-    (tokens, lname) <- parse_string tokens
+    (tokens, left) <- Sequent.parse_exp tokens
     tokens <- consume_symbol "in" tokens
     (tokens, rname) <- parse_string tokens
     tokens <- consume_token RParen tokens
-    return (tokens, In lname rname)
+    return (tokens, In left rname)
 
 parse_body :: [Token] -> Either String ([Token], Body)
 -- unit

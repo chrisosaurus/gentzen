@@ -18,7 +18,7 @@ spec = do
   describe "prop parsing" $ do
     it "in" $ do
       let expression = [LParen, Symbol "a", Symbol "in", Symbol "b", RParen]
-      let expected = Right $ ([], In "a" "b")
+      let expected = Right $ ([], In (Sequent.Symbol "a") "b")
       parse_prop expression `shouldBe` expected
     it "list of props" $ do
       let expression = [ LSquare
@@ -27,7 +27,7 @@ spec = do
                        , LParen, Symbol "c", Symbol "in", Symbol "d", RParen
                        , RSquare, Period
                        ]
-      let expected = Right $ ([], [In "a" "b", In "c" "d"])
+      let expected = Right $ ([], [In (Sequent.Symbol "a") "b", In (Sequent.Symbol "c") "d"])
       parse_props expression `shouldBe` expected
 
   describe "expr parsing" $ do
@@ -96,8 +96,8 @@ spec = do
                                        , args = [ (Sequent.Symbol "a") ]
                                        , left_name = "L"
                                        , right_name = "R"
-                                       , props = [ (In "a" "L")
-                                                 , (In "a" "R")
+                                       , props = [ (In (Sequent.Symbol "a") "L")
+                                                 , (In (Sequent.Symbol "a") "R")
                                                  ]
                                        , body = Unit
                                        })
@@ -173,8 +173,8 @@ spec = do
                             , args = [ (Sequent.Symbol "a") ]
                             , left_name = "L"
                             , right_name = "R"
-                            , props = [ (In "a" "L")
-                                      , (In "a" "R")
+                            , props = [ (In (Sequent.Symbol "a") "L")
+                                      , (In (Sequent.Symbol "a") "R")
                                       ]
                             , body = Unit
                             }]

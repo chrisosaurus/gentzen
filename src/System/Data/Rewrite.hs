@@ -12,12 +12,9 @@ where
 import qualified Sequent.Data.Sequent as Sequent
 
 -- a prosposition is a fact that can be checked
--- (a in l)
--- TODO FIXME either have this as special syntax like this
---      [(a in l), (b in r)].()
---  or re-use the existing syntax, just have sequents which either fail or succeed
---      [l-a |- r-b].()
-data Prop = In String String
+-- (a in L)
+-- (_ in L)
+data Prop = In Sequent.Exp String
     deriving (Show, Eq)
 
 -- a term for rewriting one side of a sequent

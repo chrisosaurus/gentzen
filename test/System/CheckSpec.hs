@@ -31,7 +31,7 @@ spec = do
                       , args = [Symbol "a"]
                       , left_name = "L"
                       , right_name = "R"
-                      , props = [In "a" "L"]
+                      , props = [In (Symbol "a") "L"]
                       , body = Unit
                       }
       let expected = Right ()
@@ -42,7 +42,7 @@ spec = do
                       , args = [Symbol "a"]
                       , left_name = "L"
                       , right_name = "R"
-                      , props = [In "a" "L", In "a" "R"]
+                      , props = [In (Symbol "a") "L", In (Symbol "a") "R"]
                       , body = Unit
                       }
       let expected = Right ()
@@ -146,7 +146,7 @@ spec = do
                       , args = [Symbol "a"]
                       , left_name = "L"
                       , right_name = "R"
-                      , props = [In "b" "L"]
+                      , props = [In (Symbol "b") "L"]
                       , body = Unit
                       }
       let expected = Left $ "in rule 'left undefined prop symbol' propositions: 'b' used but not defined."
@@ -157,7 +157,7 @@ spec = do
                       , args = [Symbol "a"]
                       , left_name = "L"
                       , right_name = "R"
-                      , props = [In "a" "M"]
+                      , props = [In (Symbol "a") "M"]
                       , body = Unit
                       }
       let expected = Left $ "in rule 'right undefined prop symbol' propositions: 'M' used but not defined."
@@ -280,7 +280,7 @@ spec = do
                          , args = [Symbol "a"]
                          , left_name = "L"
                          , right_name = "R"
-                         , props = [In "a" "L", In "a" "R"]
+                         , props = [In (Symbol "a") "L", In (Symbol "a") "R"]
                          , body = Unit
                          }
                   ]
