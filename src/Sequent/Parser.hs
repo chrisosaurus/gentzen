@@ -3,6 +3,7 @@ module Sequent.Parser
     parse,
     parse_prefix,
     parse_exp,
+    parse_single,
     parse_commalist,
 )
 where
@@ -11,6 +12,7 @@ import qualified Sequent.Data.Sequent as Sequent
 import Data.Token
 import Control.Applicative
 import ParserUtils
+import Data.Semigroup ((<>))
 
 -- parse consumes all input and raises error if there is any left
 parse :: [Token] -> Either String Sequent.Sequent
@@ -47,27 +49,35 @@ parse_commalist toks = do
           end toks = Right (toks, [])
 
 parse_exp :: [Token] -> Either String ([Token], Sequent.Exp)
-parse_exp (LParen:toks) = do
-    (toks, inner) <- parse_exp toks
-    toks <- consume_token RParen toks
-    return (toks, Sequent.Bracketed inner)
-parse_exp toks = do
-    (toks, single) <- parse_single toks
-    return (toks, single)
+parse_exp tokens = do
+    (tokens, exp) <- (parse_exp_binary tokens) <> (parse_single tokens)
+    return (tokens, exp)
+
+parse_exp_binary :: [Token] -> Either String ([Token], Sequent.Exp)
+parse_exp_binary tokens = do
+    (tokens, left)     <- parse_single tokens
+    (operator, tokens) <- case tokens of
+                        []     -> Left "Failed to find operator"
+                        (x:xs) -> Right (x, xs)
+    cons               <- translate operator
+    (tokens, right)    <- parse_single tokens
+    exp                <- return $ cons left right
+    return (tokens, exp)
 
 parse_single :: [Token] -> Either String ([Token], Sequent.Exp)
+parse_single (LParen:rest) = do
+    (toks, inner) <- parse_exp rest
+    toks <- consume_token RParen toks
+    return (toks, Sequent.Bracketed inner)
 parse_single (Bottom:rest) = do
     return (rest, Sequent.Bottom)
-parse_single (Symbol l:Implies:rest) = do
-    (rest, rhs) <- parse_exp rest
-    return (rest, Sequent.Implies (Sequent.Symbol l) rhs)
-parse_single (Symbol l:And:rest) = do
-    (rest, rhs) <- parse_exp rest
-    return (rest, Sequent.And (Sequent.Symbol l) rhs)
-parse_single (Symbol l:Or:rest) = do
-    (rest, rhs) <- parse_exp rest
-    return (rest, Sequent.Or (Sequent.Symbol l) rhs)
 parse_single (Symbol s:rest) = Right $ (rest, Sequent.Symbol s)
-parse_single [] = Left "parse_single: empty list found"
-parse_single _  = Left "parse_single: unknown error"
+parse_single [] = Left "parse_exp: empty list found"
+parse_single _  = Left "parse_exp: unknown error"
+
+translate :: Token -> Either String (Sequent.Exp -> Sequent.Exp -> Sequent.Exp)
+translate And = Right Sequent.And
+translate Or = Right Sequent.Or
+translate Implies = Right Sequent.Implies
+translate tok = Left $ "Unable to translate operator '" ++ (show tok) ++ "'."
 
