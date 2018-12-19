@@ -1,0 +1,12 @@
+system axiom
+rules
+    axiom (a) (L |- R) = [(a in L), (a in R)].()
+qed
+
+theorem silly_axiom
+system axiom
+sequent a |- a
+proof
+    expect a |- a
+    apply axiom [a]
+qed

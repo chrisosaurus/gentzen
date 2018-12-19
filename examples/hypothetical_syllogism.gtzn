@@ -13,3 +13,26 @@ rules
     left_bottom   ()     (L |- R) = [(Bottom in L)].()
 qed
 
+theorem hypothetical_syllogism
+system G3ip
+sequent |- ((a->b) ^ (b->c)) -> (a -> c)
+proof
+    apply right-implies
+    expect (a->b) ^ (b->c) |- a->c
+    apply right-implies
+    apply left-and
+    apply left-implies
+    {
+        apply axiom
+    }
+    {
+        apply left-implies
+        {
+            axiom
+        }
+        {
+            axiom
+        }
+    }
+qed
+
