@@ -12,8 +12,8 @@ import Gentzen.Data.WorkUnit
 
 parse :: [Token] -> Either String WorkUnit
 parse tokens = do
-    (tokens, system) <- System.parse_prefix tokens
-    (tokens, proof) <- Proof.parse_prefix tokens
+    (tokens, system)  <- System.parse_prefix tokens
+    (tokens, theorem) <- Proof.parse_prefix tokens
     [] <- expect_empty tokens
-    return $ WorkUnit [system] [proof]
+    return $ WorkUnit system theorem
 

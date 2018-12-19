@@ -5,6 +5,7 @@ module Driver
     attemptLexing,
     attemptParsing,
     attemptCheck,
+    attemptRun,
 )
 where
 
@@ -44,4 +45,23 @@ attemptCheck workunit = do
     case (check workunit) of
         Left l -> fail $ "Check failed: " ++ l
         Right () -> return ()
+
+attemptRun :: WorkUnit -> IO ()
+attemptRun workunit = do
+    case (run workunit) of
+        Left l -> fail $ "Run failed: " ++ l
+        Right (strs, st) -> do
+            putStrLn "\nSuccess"
+            putStrLn "output:"
+            putStrListLns strs
+            putStrLn "proof tree:"
+            putStrLn (show st)
+            return ()
+
+putStrListLns :: [String] -> IO ()
+putStrListLns [] = return ()
+putStrListLns (x:xs) = do
+    putStrLn $ "\t" ++ x
+    putStrListLns xs
+    return ()
 

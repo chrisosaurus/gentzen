@@ -5,7 +5,6 @@ module Proof.Check
 where
 
 import Proof.Data.Theorem
-import Proof.Data.SequentTree
 
 -- We do not perform any checking of Theorems
 -- if we knew the system and had it loaded, we could check argument arity and shape

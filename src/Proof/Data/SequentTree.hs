@@ -5,9 +5,11 @@ module Proof.Data.SequentTree
 where
 
 import Sequent.Data.Sequent
-
-data SequentTree = Unary  Sequent String SequentTree
-                 | Binary Sequent String SequentTree SequentTree
-                 | Axiom  String
+--                  Root is the first node in the tree
+data SequentTree = Root      Sequent SequentTree
+--                           rule   args    lout    lproof
+                 | Step      String [Exp] [(Sequent, SequentTree)]
+--                  Aborted is a proof that is purposefully unsatisfied
+                 | Aborted
     deriving (Show, Eq)
 
