@@ -27,6 +27,7 @@ data Token = Turnstyle
            | Exists
            | Plus
            | Minus
+           | Period
     deriving (Eq)
 
 stringify :: Token -> String
@@ -47,6 +48,7 @@ stringify Forall = "forall"
 stringify Exists = "exists"
 stringify Plus = "+"
 stringify Minus = "-"
+stringify Period = "."
 
 instance Show Token where
   show token = stringify token
@@ -77,6 +79,7 @@ lexer string                 =
                         , lexer_rsquare string
                         , lexer_plus string
                         , lexer_minus string
+                        , lexer_period string
                         , lexer_symbol string
                         ]
 
@@ -159,6 +162,10 @@ lexer_plus _          = Nothing
 lexer_minus :: String -> Maybe(Token, String)
 lexer_minus ('-':rest) = Just (Minus, rest)
 lexer_minus _          = Nothing
+
+lexer_period :: String -> Maybe(Token, String)
+lexer_period ('.':rest) = Just (Period, rest)
+lexer_period _          = Nothing
 
 lexer_symbol :: String -> Maybe (Token, String)
 lexer_symbol string = lexer_symbol' string ""
