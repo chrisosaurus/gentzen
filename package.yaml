@@ -45,3 +45,4 @@ tests:
     - -with-rtsopts=-N
     dependencies:
     - gentzen
+    - hspec
