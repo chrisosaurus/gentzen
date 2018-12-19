@@ -11,14 +11,22 @@ import Proof.Data.Theorem
 import ParserUtils
 import Data.Semigroup ((<>))
 
+-- parse consumes all input and raises an error if there is any left
 parse :: [Token] -> Either String Theorem
 parse tokens = do
+    (tokens, theorem) <- parse_prefix tokens
+    [] <- expect_empty tokens
+    return theorem
+
+-- parse_prefix will greedily consume a proof from the front, but leave the
+-- remaining tokens untouched
+parse_prefix :: [Token] -> Either String ([Token], Theorem)
+parse_prefix tokens = do
     (tokens, name) <- parse_name tokens
     (tokens, system) <- parse_system tokens
     (tokens, sequent) <- parse_sequent tokens
     (tokens, steps) <- parse_proof tokens
-    [] <- expect_empty tokens
-    return Theorem {name=name, system=system, sequent=sequent, steps=steps}
+    return (tokens, Theorem {name=name, system=system, sequent=sequent, steps=steps})
 
 parse_name :: [Token] -> Either String ([Token], String)
 parse_name tokens = do
