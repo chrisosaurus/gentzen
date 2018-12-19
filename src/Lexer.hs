@@ -137,8 +137,9 @@ lexer_symbol'   (ch:rest)  ""     | should_discard ch = lexer_symbol' rest ""
 lexer_symbol'   (ch:rest)  ""     | isAlpha ch        = lexer_symbol' rest [ch]
 lexer_symbol'   (ch:rest)  ""                         = Nothing
 lexer_symbol'   (ch:rest)  sym    | should_break ch   = Just (Symbol sym, ch:rest)
---                                  following can be alphaNum
+--                                  following can be alphaNum or underscore
 lexer_symbol'   (ch:rest)  sym    | isAlphaNum ch     = lexer_symbol' rest (sym++[ch])
+lexer_symbol'   (ch:rest)  sym    | ch == '_'         = lexer_symbol' rest (sym++[ch])
 lexer_symbol'   []         ""                         = Nothing
 lexer_symbol'   rest       sym                        = Just (Symbol sym, rest)
 

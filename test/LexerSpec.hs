@@ -33,6 +33,10 @@ spec = do
       let expression = "abc123"
       let expected = Right [Symbol "abc123"]
       lexer expression `shouldBe` expected
+    it "symbol underscore" $ do
+      let expression = "left_and"
+      let expected = Right [Symbol "left_and"]
+      lexer expression `shouldBe` expected
     it "all spaces" $ do
       let expression = "     "
       let expected = Right []
