@@ -7,7 +7,7 @@ where
 
 import Sequent.Data.Sequent
 
-data Stmt = Substeps [Stmt]
+data Stmt = Branch [Stmt] [Stmt]
           -- apply a named rewrite rule with arguments
           | Apply String [Exp]
           -- Substeps are a bracketed subproof

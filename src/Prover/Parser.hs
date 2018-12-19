@@ -63,11 +63,19 @@ parse_proof_body :: [Token] -> Either String ([Token], [Stmt])
 parse_proof_body tokens = case (parse_stmt tokens) of
                             Left l -> Left l
                             Right (Symbol "qed":tokens', stmt) -> Right (Symbol "qed":tokens', [stmt])
+                            Right (RCurly:tokens', stmt) -> Right (RCurly:tokens', [stmt])
                             Right (tokens', stmt) -> case (parse_proof_body tokens') of
                                 Left l -> Left l
                                 Right (tokens'', stmts) -> Right (tokens'', (stmt:stmts))
 
 parse_stmt :: [Token] -> Either String ([Token], Stmt)
+parse_stmt (LCurly:tokens) = do
+    (tokens', left) <- parse_proof_body tokens
+    tokens'' <- consume_token RCurly tokens'
+    tokens''' <- consume_token LCurly tokens''
+    (tokens'''', right) <- parse_proof_body tokens'''
+    tokens''''' <- consume_token RCurly tokens''''
+    return (tokens''''', Branch left right)
 parse_stmt (Symbol "print":rest) = Right (rest, Print)
 parse_stmt (Symbol "abort":rest) = Right (rest, Abort)
 parse_stmt (Symbol "expect":tokens) = do

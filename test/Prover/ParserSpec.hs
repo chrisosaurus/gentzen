@@ -61,7 +61,8 @@ spec = do
                            , Symbol "print"
                            , Symbol "expect", Symbol "a", Turnstyle, Symbol "a"
                            , Symbol "apply", Symbol "axiom",  LSquare, Symbol "a", RSquare
-                           , Symbol "abort"
+                           , LCurly, Symbol "print", Symbol "abort", RCurly
+                           , LCurly, Symbol "abort", RCurly
                        , Symbol "qed"
                        ]
       let expected = Right $ Theorem { name    = "silly-axiom"
@@ -70,7 +71,7 @@ spec = do
                                      , steps   = [ Print
                                                  , Expect (Sequent.Sequent [Sequent.Symbol "a"] [Sequent.Symbol "a"])
                                                  , Apply "axiom" [Sequent.Symbol "a"]
-                                                 , Abort
+                                                 , Branch [Print, Abort] [Abort]
                                                  ]
                                      }
       parse expression `shouldBe` expected
