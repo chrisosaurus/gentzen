@@ -5,9 +5,9 @@ module Gentzen.Run
 where
 
 import Gentzen.Data.WorkUnit
-import qualified Proof.Run as Proof
-import Proof.Data.SequentTree
+import Proof.Data.Proof
+import qualified Proof.Run2 as Proof
 
-run :: WorkUnit -> Either String ([String], SequentTree)
+run :: WorkUnit -> Either String ([String], Proof)
 run (WorkUnit system theorem) = Proof.run system theorem
 
