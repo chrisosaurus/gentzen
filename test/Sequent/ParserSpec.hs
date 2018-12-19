@@ -33,7 +33,6 @@ spec = do
                                              ] [Sequent.Symbol "b"]
       parse expression `shouldBe` expected
 
-
 main :: IO ()
 main = hspec spec
 

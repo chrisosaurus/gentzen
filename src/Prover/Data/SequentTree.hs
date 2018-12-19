@@ -8,5 +8,6 @@ import Sequent.Data.Sequent
 
 data SequentTree = Unary  Sequent String SequentTree
                  | Binary Sequent String SequentTree SequentTree
-                 | Axiom String
+                 | Axiom  String
     deriving (Show, Eq)
+

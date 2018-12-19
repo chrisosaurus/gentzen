@@ -37,6 +37,7 @@ spec = do
                                      , steps   = [ Apply "axiom" [Sequent.Symbol "a"] ]
                                      }
       parse expression `shouldBe` expected
+
     it "expect" $ do
       let expression = [ Symbol "theorem", Symbol "silly-axiom"
                        , Symbol "system",  Symbol "G3ip"
@@ -52,6 +53,7 @@ spec = do
                                      , steps   = [ Expect (Sequent.Sequent [Sequent.Symbol "a"] [Sequent.Symbol "a"]) ]
                                      }
       parse expression `shouldBe` expected
+
     it "all commands" $ do
       let expression = [ Symbol "theorem", Symbol "silly-axiom"
                        , Symbol "system",  Symbol "G3ip"
@@ -75,10 +77,6 @@ spec = do
                                                  ]
                                      }
       parse expression `shouldBe` expected
-
-
-
-
 
 main :: IO ()
 main = hspec spec
