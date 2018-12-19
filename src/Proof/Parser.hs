@@ -1,6 +1,7 @@
 module Proof.Parser
 (
     parse,
+    parse_prefix,
 )
 where
 
