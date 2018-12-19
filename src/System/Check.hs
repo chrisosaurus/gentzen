@@ -1,40 +1,74 @@
 module System.Check
 (
     check_rule,
+    check_system,
 )
 where
 
 import Sequent.Data.Sequent
 import System.Data.Rewrite
 import System.Data.Rule
+import System.Data.System
 
+-- check that a given system is well formed
+--
+-- check to do:
+--  every rule name is unique
+--  every rule is well formed
+check_system :: System -> Either String ()
+check_system System { system_name = system_name
+                    , rules = rules
+                    } = do
+    ctx <- return $ "in system '" ++ system_name ++ "': "
+    () <- check_rule_names_unique ctx rules
+    () <- check_rules ctx rules
+    return ()
+
+check_rule_names_unique :: String -> [Rule] -> Either String ()
+check_rule_names_unique ctx rules = do
+    ctx <- return $ ctx ++ "rule "
+    rule_names <- return $ extract_rule_names rules
+    () <- all_unique ctx rule_names
+    return ()
+
+extract_rule_names :: [Rule] -> [String]
+extract_rule_names [] = []
+extract_rule_names (Rule { rule_name = rule_name}:xs) = rule_name:(extract_rule_names xs)
+
+check_rules :: String -> [Rule] -> Either String ()
+check_rules ctx [] = Right ()
+check_rules ctx (x:xs) = do
+    () <- check_rule ctx x
+    () <- check_rules ctx xs
+    return ()
+
+-- check that a given rule is well formed
+--
 -- checks to do:
 --  every symbol in args is unique
 --  left_name and right_name are unique and not in args
 --  every symbol mentioned in props is mentioned in args, left_name, or right_name
 --  every symbol mentioned in body is mentioned in args, left_name, or right_name
-
--- check that a given rule is well formed
-check_rule :: Rule -> Either String ()
-check_rule Rule{ rule_name = rule_name
-               , args = args
-               , left_name = left_name
-               , right_name = right_name
-               , props = props
-               , body = body
-               } = do
+check_rule :: String -> Rule -> Either String ()
+check_rule ctx Rule{ rule_name = rule_name
+                   , args = args
+                   , left_name = left_name
+                   , right_name = right_name
+                   , props = props
+                   , body = body
+                   } = do
     arg_symbols <- return $ extract_sequent_list_symbols args
     env_symbols <- return $ (left_name:right_name:arg_symbols)
-    ctx <- return $ "in rule '" ++ rule_name ++ "' arguments: "
-    () <- all_unique ctx env_symbols
+    ctx' <- return $ ctx ++ "in rule '" ++ rule_name ++ "' arguments: "
+    () <- all_unique ctx' env_symbols
 
     props_symbols <- return $ extract_props_symbols props
-    ctx <- return $ "in rule '" ++ rule_name ++ "' propositions: "
-    () <- check_defined ctx props_symbols env_symbols
+    ctx' <- return $ ctx ++ "in rule '" ++ rule_name ++ "' propositions: "
+    () <- check_defined ctx' props_symbols env_symbols
 
     body_symbols <- return $ extract_body_symbols body
-    ctx <- return $ "in rule '" ++ rule_name ++ "' rewrite rule: "
-    () <- check_defined ctx body_symbols env_symbols
+    ctx' <- return $ ctx ++ "in rule '" ++ rule_name ++ "' rewrite rule: "
+    () <- check_defined ctx' body_symbols env_symbols
     return ()
 
 -- check that every string is unique (appears only once)
