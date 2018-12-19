@@ -1,6 +1,6 @@
 module System.Check
 (
-    check,
+    check_rule,
 )
 where
 
@@ -15,14 +15,14 @@ import System.Data.Rule
 --  every symbol mentioned in body is mentioned in args, left_name, or right_name
 
 -- check that a given rule is well formed
-check :: Rule -> Either String ()
-check Rule{ rule_name = rule_name
-          , args = args
-          , left_name = left_name
-          , right_name = right_name
-          , props = props
-          , body = body
-          } = do
+check_rule :: Rule -> Either String ()
+check_rule Rule{ rule_name = rule_name
+               , args = args
+               , left_name = left_name
+               , right_name = right_name
+               , props = props
+               , body = body
+               } = do
     arg_symbols <- return $ extract_sequent_list_symbols args
     env_symbols <- return $ (left_name:right_name:arg_symbols)
     () <- all_unique rule_name env_symbols

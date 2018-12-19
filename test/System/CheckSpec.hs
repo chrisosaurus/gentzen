@@ -23,7 +23,7 @@ spec = do
                         , body = Unit
                         }
       let expected = Right $ ()
-      check system `shouldBe` expected
+      check_rule system `shouldBe` expected
 
     it "symbol in prop" $ do
       let system = Rule { rule_name = "defined prop symbol"
@@ -34,7 +34,7 @@ spec = do
                         , body = Unit
                         }
       let expected = Right ()
-      check system `shouldBe` expected
+      check_rule system `shouldBe` expected
 
     it "axiom" $ do
       let system = Rule { rule_name = "axiom"
@@ -45,7 +45,7 @@ spec = do
                         , body = Unit
                         }
       let expected = Right ()
-      check system `shouldBe` expected
+      check_rule system `shouldBe` expected
 
     it "left_and" $ do
       let lterm = Expr "L" [ Remove (And (Symbol "a") (Symbol "b"))
@@ -62,7 +62,7 @@ spec = do
                         , body = body
                         }
       let expected = Right ()
-      check system `shouldBe` expected
+      check_rule system `shouldBe` expected
 
     it "right_and" $ do
       let llterm = Expr "L" [Add (Symbol "a")]
@@ -79,12 +79,12 @@ spec = do
                         , body = body
                         }
       let expected = Right ()
-      check system `shouldBe` expected
+      check_rule system `shouldBe` expected
 
 
 
 
-  describe "error cases" $ do
+  describe "check_rule error cases" $ do
     it "repeated argument error 1" $ do
       let system = Rule { rule_name = "repeating argument"
                         , args = [Symbol "a", Symbol "b", Symbol "a"]
@@ -94,7 +94,7 @@ spec = do
                         , body = Unit
                         }
       let expected = Left $ "in rule 'repeating argument': argument 'a' is repeated."
-      check system `shouldBe` expected
+      check_rule system `shouldBe` expected
 
     it "repeated argument error 2" $ do
       let system = Rule { rule_name = "repeating argument"
@@ -105,7 +105,7 @@ spec = do
                         , body = Unit
                         }
       let expected = Left $ "in rule 'repeating argument': argument 'a' is repeated."
-      check system `shouldBe` expected
+      check_rule system `shouldBe` expected
 
     it "repeated argument error 3" $ do
       let system = Rule { rule_name = "repeating argument"
@@ -116,7 +116,7 @@ spec = do
                         , body = Unit
                         }
       let expected = Left $ "in rule 'repeating argument': argument 'b' is repeated."
-      check system `shouldBe` expected
+      check_rule system `shouldBe` expected
 
     it "repeated sequent name error" $ do
       let system = Rule { rule_name = "repeating sequent name"
@@ -127,7 +127,7 @@ spec = do
                         , body = Unit
                         }
       let expected = Left $ "in rule 'repeating sequent name': argument 'L' is repeated."
-      check system `shouldBe` expected
+      check_rule system `shouldBe` expected
 
     it "non unique sequent name error" $ do
       let system = Rule { rule_name = "non-unique sequent name"
@@ -138,7 +138,7 @@ spec = do
                         , body = Unit
                         }
       let expected = Left $ "in rule 'non-unique sequent name': argument 'a' is repeated."
-      check system `shouldBe` expected
+      check_rule system `shouldBe` expected
 
     it "left undefined symbol in prop" $ do
       let system = Rule { rule_name = "left undefined prop symbol"
@@ -149,7 +149,7 @@ spec = do
                         , body = Unit
                         }
       let expected = Left $ "in rule 'left undefined prop symbol': symbol 'b' used in rewrite rule but not defined."
-      check system `shouldBe` expected
+      check_rule system `shouldBe` expected
 
     it "right undefined symbol in prop" $ do
       let system = Rule { rule_name = "right undefined prop symbol"
@@ -160,7 +160,7 @@ spec = do
                         , body = Unit
                         }
       let expected = Left $ "in rule 'right undefined prop symbol': symbol 'M' used in rewrite rule but not defined."
-      check system `shouldBe` expected
+      check_rule system `shouldBe` expected
 
     it "undefined symbol in body 1" $ do
       let lterm = SExp (Symbol "e")
@@ -174,7 +174,7 @@ spec = do
                         , body = body
                         }
       let expected = Left $ "in rule 'test': symbol 'e' used in rewrite rule but not defined."
-      check system `shouldBe` expected
+      check_rule system `shouldBe` expected
 
     it "undefined symbol in body 2" $ do
       let lterm = Empty
@@ -188,7 +188,7 @@ spec = do
                         , body = body
                         }
       let expected = Left $ "in rule 'test': symbol 'e' used in rewrite rule but not defined."
-      check system `shouldBe` expected
+      check_rule system `shouldBe` expected
 
     it "undefined symbol in body 3" $ do
       let lterm = Empty
@@ -202,7 +202,7 @@ spec = do
                         , body = body
                         }
       let expected = Left $ "in rule 'test': symbol 'e' used in rewrite rule but not defined."
-      check system `shouldBe` expected
+      check_rule system `shouldBe` expected
 
     it "undefined symbol in body 4" $ do
       let lterm = Empty
@@ -221,7 +221,7 @@ spec = do
                         , body = body
                         }
       let expected = Left $ "in rule 'test': symbol 'e' used in rewrite rule but not defined."
-      check system `shouldBe` expected
+      check_rule system `shouldBe` expected
 
     it "faulty left_and" $ do
       let lterm = Expr "L" [ Remove (And (Symbol "a") (Symbol "b"))
@@ -239,7 +239,7 @@ spec = do
                         , body = body
                         }
       let expected = Left $ "in rule 'faulty left_and': symbol 'c' used in rewrite rule but not defined."
-      check system `shouldBe` expected
+      check_rule system `shouldBe` expected
 
     it "faulty right_and" $ do
       let llterm = Expr "L" [Add (Symbol "a")]
@@ -256,7 +256,7 @@ spec = do
                         , body = body
                         }
       let expected = Left $ "in rule 'faulty right_and': symbol 'c' used in rewrite rule but not defined."
-      check system `shouldBe` expected
+      check_rule system `shouldBe` expected
 
 
 main :: IO ()
