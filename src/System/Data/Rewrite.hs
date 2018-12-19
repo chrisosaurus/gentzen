@@ -47,7 +47,7 @@ data Body = Unit
           | Pair Sequ Sequ
     deriving (Show, Eq)
 
-data Rule = Rule { name       :: String
+data Rule = Rule { rule_name  :: String
                  , args       :: [Sequent.Exp]
                  , left_name  :: String
                  , right_name :: String
