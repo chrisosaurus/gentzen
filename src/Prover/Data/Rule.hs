@@ -81,13 +81,13 @@ add_exp_lhs :: Exp -> Sequent -> Sequent
 add_exp_lhs exp (Sequent lhs rhs) = (Sequent (exp:lhs) rhs)
 
 add_exps_lhs :: [Exp] -> Sequent -> Sequent
-add_exps_lhs exps (Sequent lhs rhs) = (Sequent (lhs ++ exps) rhs)
+add_exps_lhs exps (Sequent lhs rhs) = (Sequent (exps ++ lhs) rhs)
 
 add_exp_rhs :: Exp -> Sequent -> Sequent
 add_exp_rhs exp (Sequent lhs rhs) = (Sequent lhs (exp:rhs))
 
 add_exps_rhs :: [Exp] -> Sequent -> Sequent
-add_exps_rhs exps (Sequent lhs rhs) = (Sequent lhs (rhs ++ exps))
+add_exps_rhs exps (Sequent lhs rhs) = (Sequent lhs (exps ++ rhs))
 
 split_exp :: Exp -> Either String (Exp, Exp)
 split_exp (And     l r) = Right (l, r)

@@ -34,7 +34,7 @@ left_and = Unary "left-and" left_and'
 left_and' :: [Exp] -> Sequent -> Either String Sequent
 left_and' [And l r] sequent = do
     sequent'  <- remove_exp_lhs (And l r) sequent
-    let sequent'' = add_exps_lhs [l, r] sequent
+    let sequent'' = add_exps_lhs [l, r] sequent'
     return sequent''
 left_and' args _ = Left $ "wrong args for left_and': " ++ show args
 
@@ -45,8 +45,8 @@ right_and = Binary "right-and" right_and'
 right_and' :: [Exp] -> Sequent -> Either String (Sequent, Sequent)
 right_and' [And l r] sequent = do
     sequent'   <- remove_exp_rhs (And l r) sequent
-    let sequent_l  = add_exp_rhs l sequent
-    let sequent_r  = add_exp_rhs r sequent
+    let sequent_l  = add_exp_rhs l sequent'
+    let sequent_r  = add_exp_rhs r sequent'
     return (sequent_l, sequent_r)
 right_and' args _ = Left $ "wrong args for right_and': " ++ show args
 
@@ -57,8 +57,8 @@ left_or = Binary "left-or" left_or'
 left_or' :: [Exp] -> Sequent -> Either String (Sequent, Sequent)
 left_or' [Or l r] sequent = do
     sequent'   <- remove_exp_lhs (Or l r) sequent
-    let sequent_l  = add_exp_lhs l sequent
-    let sequent_r  = add_exp_lhs r sequent
+    let sequent_l  = add_exp_lhs l sequent'
+    let sequent_r  = add_exp_lhs r sequent'
     return (sequent_l, sequent_r)
 left_or' args _ = Left $ "wrong args for left_or': " ++ show args
 
@@ -69,7 +69,7 @@ right_or1 = Unary "right-or1" right_or1'
 right_or1' :: [Exp] -> Sequent -> Either String Sequent
 right_or1' [Or l r] sequent = do
     sequent'  <- remove_exp_rhs (Or l r) sequent
-    let sequent'' = add_exp_rhs l sequent
+    let sequent'' = add_exp_rhs l sequent'
     return sequent''
 right_or1' args _ = Left $ "wrong args for right_or1': " ++ show args
 
@@ -80,7 +80,7 @@ right_or2 = Unary "right-or2" right_or2'
 right_or2' :: [Exp] -> Sequent -> Either String Sequent
 right_or2' [Or l r] sequent = do
     sequent'  <- remove_exp_rhs (Or l r) sequent
-    let sequent'' = add_exp_rhs r sequent
+    let sequent'' = add_exp_rhs r sequent'
     return sequent''
 right_or2' args _ = Left $ "wrong args for right_or2': " ++ show args
 
@@ -103,8 +103,8 @@ right_implies = Unary "right-implies" right_implies'
 right_implies' :: [Exp] -> Sequent -> Either String Sequent
 right_implies' [Implies l r] sequent = do
     sequent'   <- remove_exp_rhs (Implies l r) sequent
-    let sequent''  = add_exp_lhs l sequent
-    let sequent''' = add_exp_rhs r sequent
+    let sequent''  = add_exp_lhs l sequent'
+    let sequent''' = add_exp_rhs r sequent''
     return sequent'''
 right_implies' args _ = Left $ "wrong args for right_implies': " ++ show args
 
