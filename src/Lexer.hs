@@ -2,6 +2,7 @@ module Lexer
 (
     Token (..),
     lexer,
+    stringify,
 )
 where
 
@@ -21,7 +22,24 @@ data Token = Turnstyle
            | LSquare
            | RSquare
            | Symbol String
-    deriving (Show, Eq)
+    deriving (Eq)
+
+stringify :: Token -> String
+stringify Turnstyle = "|-"
+stringify Comma = ","
+stringify Implies = "->"
+stringify And = "^"
+stringify Or = "v"
+stringify LParen = "("
+stringify RParen = ")"
+stringify LCurly = "{"
+stringify RCurly = "}"
+stringify LSquare = "["
+stringify RSquare = "]"
+stringify (Symbol s) = s
+
+instance Show Token where
+  show token = stringify token
 
 lexer :: String -> Either String [Token]
 lexer ""                     = Right []
