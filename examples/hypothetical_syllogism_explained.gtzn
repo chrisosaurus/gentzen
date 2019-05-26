@@ -1,0 +1,43 @@
+system G3ip
+rules
+    axiom         (a)    (L |- R) = [(a in L), (a in R)].()
+    left_and      (a^b)  (L |- R) = L-(a^b)+a+b |- R
+    right_and     (a^b)  (L |- R) = (L+a |- R-(a^b)), (L+b |- R-(a^b))
+    left_or       (a∨b)  (L |- R) = (L-(a∨b)+a |- R), (L-(a∨b)+b |- R)
+    right_or1     (a∨b)  (L |- R) = L |- R-(a∨b)+a
+    right_or2     (a∨b)  (L |- R) = L |- R-(a∨b)+b
+    left_implies  (a->b) (L |- R) = (L |- a), (L-(a->b)+b |- R)
+    right_implies (a->b) (L |- R) = L+a |- R-(a->b)+b
+    left_bottom   ()     (L |- R) = [(_ in L)].()
+qed
+
+theorem hypothetical_syllogism
+system G3ip
+sequent |- ((a->b) ^ (b->c)) -> (a->c)
+proof
+    expect |- ((a->b) ^ (b->c)) -> (a->c)
+    apply right_implies [((a->b)^(b->c))->(a->c)]
+    expect (a->b) ^ (b->c) |- a->c
+    apply right_implies [a->c]
+    expect a, (a->b) ^ (b->c) |- c
+    apply left_and [(a->b)^(b->c)]
+    expect b->c, a->b, a |- c
+    apply left_implies [a->b]
+    {
+        expect b->c, a->b, a |- a
+        apply axiom [a]
+    }
+    {
+        expect b, b->c, a |- c
+        apply left_implies [b->c]
+        {
+            expect b, b->c, a |- b
+            apply axiom [b]
+        }
+        {
+            expect c, b, a |- c
+            apply axiom [c]
+        }
+    }
+qed
+
