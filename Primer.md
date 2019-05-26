@@ -43,29 +43,26 @@ A sequent is a logical assertion of the form
 where
 
 <table>
-    <tr>
-      <th>Symbol</th>
-      <th>Name</th>
-      <th>Description</th>
-    </tr>
-
-    <tr>
-      <tr>|-</tr>
-      <tr>Turnstyle</tr>
-      <tr>separates the left and right hand side</tr>
-    </tr>
-
-    <tr>
-      <tr>Γ</tr>
-      <tr>Gamma</tr>
-      <tr>A multi-set of conjunctive (and) formulas</tr>
-    </tr>
-
-    <tr>
-      <tr>Δ</tr>
-      <tr>Delta</tr>
-      <tr>A multi-set of disjunctive (or) formulas</tr>
-    </tr>
+  <tr>
+    <th>Symbol</th>
+    <th>Name</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td>|-</td>
+    <td>Turnstyle</td>
+    <td>separates the left and right hand side</td>
+  </tr>
+  <tr>
+    <td>Γ</td>
+    <td>Gamma</td>
+    <td>A multi-set of conjunctive (and) formulas</td>
+  </tr>
+  <tr>
+    <td>Δ</td>
+    <td>Delta</td>
+    <td>A multi-set of disjunctive (or) formulas</td>
+  </tr>
 </table>
 
 for example the sequent
