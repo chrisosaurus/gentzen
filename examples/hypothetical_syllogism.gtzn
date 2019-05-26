@@ -13,7 +13,7 @@ qed
 
 theorem hypothetical_syllogism
 system G3ip
-sequent |- ((a->b) ^ (b->c)) -> (a -> c)
+sequent |- ((a->b) ^ (b->c)) -> (a->c)
 proof
     apply right_implies [((a->b)^(b->c))->(a->c)]
     expect (a->b) ^ (b->c) |- a->c

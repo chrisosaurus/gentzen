@@ -7,10 +7,10 @@ where
 
 import Sequent.Data.Sequent
 
+          -- a Branch consists of two bracketed subproofs
 data Stmt = Branch [Stmt] [Stmt]
           -- apply a named rewrite rule with arguments
           | Apply String [Exp]
-          -- Substeps are a bracketed subproof
           | Expect Sequent
           | Print
           | Abort

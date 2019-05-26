@@ -6,7 +6,6 @@ module Proof.Run
 )
 where
 
-
 import Sequent.Data.Sequent (Sequent)
 import System.Apply (apply)
 import Proof.Data.Theorem

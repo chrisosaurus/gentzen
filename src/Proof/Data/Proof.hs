@@ -110,7 +110,7 @@ start seq = Proof { sequents = Map.singleton goal_id seq
 
 -- finished IFF unproven list is empty
 finished :: Proof -> Bool
-finished Proof {unproven=unproven} = null unproven
+finished Proof {unproven} = null unproven
 
 addSeq :: Sequent -> Proof -> (ID, Proof)
 addSeq seq proof = (id, proof'')
