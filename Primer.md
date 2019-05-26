@@ -50,17 +50,17 @@ where
   </tr>
   <tr>
     <td>|-</td>
-    <td>Turnstyle</td>
+    <td>turnstile</td>
     <td>separates the left and right hand side</td>
   </tr>
   <tr>
     <td>Γ</td>
-    <td>Gamma</td>
+    <td>gamma</td>
     <td>A multi-set of conjunctive (and) formulas</td>
   </tr>
   <tr>
     <td>Δ</td>
-    <td>Delta</td>
+    <td>delta</td>
     <td>A multi-set of disjunctive (or) formulas</td>
   </tr>
 </table>
@@ -94,8 +94,8 @@ In Sequent Calculus we have inference rules allow us to manipulate sequents in
 order to prove properties.
 
 Each inference rule has a name including either "left" or "right",
-"left rules" add things to the left side of the turnstyle in their conclusion,
-"right rules" add tings to the right side of the turnstyle in their conclusion.
+"left rules" add things to the left side of the turnstile in their conclusion,
+"right rules" add tings to the right side of the turnstile in their conclusion.
 
 
 Consider the "right implication rule" (I have numbered the parts 1 through 4):
@@ -184,7 +184,7 @@ where
 
  1. our rule name
  2. the part of our rule we are focussing on, can be seen as the 'arguments'
- 3. a pattern match of the sequent, L for left side of turnstyle and R for right side of turnstyle
+ 3. a pattern match of the sequent, L for left side of turnstile and R for right side of turnstile
  4. a rewrite/transformation rule for our resulting sequent(s)
 
 If we have a current proof obligation (goal) of the form:
