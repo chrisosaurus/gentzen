@@ -1,0 +1,15 @@
+system axiom_and_right_implies
+rules
+    right_implies (a->b) (L |- R) = L+a |- R-(a->b)+b
+    axiom (a) (L |- R) = [(a in L), (a in R)].()
+qed
+
+theorem simple_right_implies
+system axiom_and_right_implies
+sequent |- (a->a)
+proof
+    expect |- (a->a)
+    apply right_implies [(a->a)]
+    expect a |- a
+    apply axiom [a]
+qed
