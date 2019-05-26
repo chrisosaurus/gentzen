@@ -29,7 +29,7 @@ run sy th = do
     proof         <- return $ Proof.start seq
     (strs, proof) <- run' sy proof steps
     if Proof.finished proof
-        then Right ([], proof)
+        then Right (strs, proof)
         else Left $
             "Failed to discharge remaining proof obligations: " ++
             (show (Proof.unproven proof)) ++ "\n" ++ (show proof)
@@ -79,7 +79,7 @@ step sy proof stmt = case stmt of
         proof <- return $ Proof.abortSeq id proof
         step  <- return $ Proof.Abort id
         proof <- return $ Proof.addStep step proof
-        return ([], proof)
+        return (["aborted"], proof)
 
 expect :: Sequent -> Sequent -> Either String ()
 expect exp got | exp == got = Right ()

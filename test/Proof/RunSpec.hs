@@ -17,7 +17,7 @@ import Proof.Run
 
 spec :: Spec
 spec = do
-  describe "step tests" $ do
+  describe "testing single steps" $ do
     it "abort" $ do
       let system   = System { system_name = "boring"
                             , rules       = []
@@ -25,7 +25,7 @@ spec = do
       let sequent  = Sequent.Sequent [] []
       let proof    = start sequent
       let stmt     = Theorem.Abort
-      let expected = Right ([],
+      let expected = Right (["aborted"],
                             Proof { sequents = Map.singleton 0 sequent
                                   , steps    = Map.singleton 0 (Abort 0)
                                   , unproven = []
@@ -65,6 +65,32 @@ spec = do
                                   , nextId   = 1
                                   })
       step system proof stmt `shouldBe` expected
+
+  describe "testing multiple steps" $ do
+    it "print and abort" $ do
+      let system   = System { system_name = "boring"
+                            , rules       = []
+                            }
+      let sequent = Sequent.Sequent [Sequent.Symbol "a"] [Sequent.Symbol "a"]
+      let steps = [ Theorem.Print
+                  , Theorem.Abort
+                  ]
+      let theorem  = Theorem.Theorem { Theorem.name    = "boring_theorem"
+                                     , Theorem.system  = "boring"
+                                     , Theorem.sequent = sequent
+                                     , Theorem.steps   = steps
+                                     }
+      let expected = Right ([ "[a] |- [a]"
+                            , "aborted"
+                            ],
+                            Proof { sequents = Map.singleton 0 sequent
+                                  , steps    = Map.singleton 0 (Abort 0)
+                                  , unproven = []
+                                  , aborted  = Set.singleton 0
+                                  , nextId   = 1
+                                  })
+      run system theorem `shouldBe` expected
+
 
 main :: IO ()
 main = hspec spec
