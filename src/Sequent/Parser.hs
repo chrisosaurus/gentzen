@@ -90,7 +90,7 @@ parse_substitution tokens = do
     tokens                <- consume_token ForwardSlash tokens
     (tokens, needle)      <- parse_string tokens
     tokens                <- consume_token GreaterThan tokens
-    exp                   <- return $ Sequent.Substitute haystack replacement needle
+    exp                   <- return $ Sequent.Subst haystack replacement needle
     return (tokens, exp)
 
 parse_single :: [Token] -> Either String ([Token], Sequent.Exp)

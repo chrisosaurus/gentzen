@@ -36,7 +36,7 @@ spec = do
       parse expression `shouldBe` expected
     it "substitution" $ do
       let expression = [Turnstile, Symbol "A", LessThan, Symbol "x", ForwardSlash, Symbol "y", GreaterThan]
-      let expected = Right $ Sequent.Sequent [] [Sequent.Substitute (Sequent.Symbol "A") (Sequent.Symbol "x") "y"]
+      let expected = Right $ Sequent.Sequent [] [Sequent.Subst (Sequent.Symbol "A") (Sequent.Symbol "x") "y"]
       parse expression `shouldBe` expected
     it "implies" $ do
       let expression = [Symbol "a", Implies, Symbol "b", Comma, Symbol "a", Turnstile, Symbol "b"]
