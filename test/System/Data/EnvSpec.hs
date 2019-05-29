@@ -48,6 +48,14 @@ spec = do
       let expression = Env "a" [(Symbol "aval")] (Env "b" [(Symbol "bval")] EnvEmpty)
       let expected = Right $ Env "a" [(Symbol "aval")] EnvEmpty
       remove expression "b" `shouldBe` expected
+    it "remove_if_exist exists" $ do
+      let expression = Env "a" [(Symbol "aval")] (Env "b" [(Symbol "bval")] EnvEmpty)
+      let expected = Env "a" [(Symbol "aval")] EnvEmpty
+      remove_if_exists expression "b" `shouldBe` expected
+    it "remove_if_exist doesnt exist" $ do
+      let expression = Env "a" [(Symbol "aval")] (Env "b" [(Symbol "bval")] EnvEmpty)
+      let expected = expression
+      remove_if_exists expression "c" `shouldBe` expected
     it "merge duplicate" $ do
       let left   = Env "a" [(Symbol "aval")] (Env "b" [(Symbol "bval")] EnvEmpty)
       let right  = Env "c" [(Symbol "cval")] (Env "d" [(Symbol "dval")] EnvEmpty)

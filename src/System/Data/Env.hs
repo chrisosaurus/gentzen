@@ -5,6 +5,7 @@ module System.Data.Env
     get,
     insert,
     remove,
+    remove_if_exists,
     merge,
 )
 where
@@ -35,9 +36,14 @@ remove :: Env -> String -> Either String Env
 remove (EnvEmpty) str =
     Left $ "Env.remove: environment did not contain '" ++ str ++ "'."
 remove (Env s _ rest) str | s == str = Right rest
-remove (Env s e rest) str             = do
+remove (Env s e rest) str            = do
     rest <- remove rest str
     return (Env s e rest)
+
+remove_if_exists :: Env -> String -> Env
+remove_if_exists (EnvEmpty)     _              = EnvEmpty
+remove_if_exists (Env s _ rest) str | s == str = rest
+remove_if_exists (Env s e rest) str            = Env s e (remove_if_exists rest str)
 
 merge :: Env -> Env -> Either String Env
 merge (Env s e rest) right | exists right s = Left $ "Env.merge: duplicate key '" ++ s ++ "'."
