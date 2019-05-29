@@ -1,3 +1,4 @@
+-- G3ip taken from "structural proof theory"
 system G3ip
 rules
     axiom         (a)    (L |- R) = [(a in L), (a in R)].()
@@ -11,6 +12,7 @@ rules
     left_bottom   ()     (L |- R) = [(_ in L)].()
 qed
 
+-- simple proof of being able to combine a->b and b->c to form a->c
 theorem hypothetical_syllogism
 system G3ip
 sequent |- ((a->b) ^ (b->c)) -> (a->c)
