@@ -17,6 +17,10 @@ spec = do
       let expression = "()"
       let expected = Right [LParen, RParen]
       lexer expression `shouldBe` expected
+    it "comment" $ do
+      let expression = "-- this is a comment and should be thrown away \n"
+      let expected = Right []
+      lexer expression `shouldBe` expected
     it "symbol 1" $ do
       let expression = "x"
       let expected = Right [Symbol "x"]
@@ -171,6 +175,11 @@ spec = do
       let expression = "(∃x A)"
       let expected = Right [LParen, Exists, Symbol "x", Symbol "A", RParen]
       lexer expression `shouldBe` expected
+    it "comment between symbols" $ do
+      let expression = "x-- this is a comment and should be thrown away \ny"
+      let expected = Right [Symbol "x", Symbol "y"]
+      lexer expression `shouldBe` expected
+
 
   describe "lexer error handling" $ do
     it "unknown char" $ do
