@@ -14,8 +14,12 @@ import qualified Sequent.Data.Sequent as Sequent
 -- a prosposition is a fact that can be checked
 -- (a in L)
 -- (_ in L)
-data Prop = In Sequent.Exp String
-          | InSet Sequent.Exp [Sequent.Exp]
+-- (a notfreein L)
+data Prop = In        Sequent.Exp String
+          | FreeIn    Sequent.Exp String
+          | NotFreeIn Sequent.Exp String
+          | InSet     Sequent.Exp [Sequent.Exp]
+          | NotInSet  Sequent.Exp [Sequent.Exp]
     deriving (Show, Eq)
 
 -- a term for rewriting one side of a sequent

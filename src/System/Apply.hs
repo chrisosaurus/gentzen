@@ -17,6 +17,7 @@ module System.Apply
     apply_prop,
     instantiate,
     instantiates,
+    freeset,
 )
 where
 
@@ -47,10 +48,42 @@ rewrite_prop (In sexp str) env = do
     sexp <- instantiate sexp env
     set  <- Env.get env str
     return $ InSet sexp set
+rewrite_prop (FreeIn sexp str) env = do
+    sexp  <- instantiate sexp env
+    set   <- Env.get env str
+    free  <- return $ freesets set
+    return $ InSet sexp free
+rewrite_prop (NotFreeIn sexp str) env = do
+    sexp  <- instantiate sexp env
+    set   <- Env.get env str
+    free  <- return $ freesets set
+    return $ NotInSet sexp free
 rewrite_prop (InSet sexp sexps) env = do
     sexp  <- instantiate sexp env
     sexps <- instantiates sexps env
     return $ InSet sexp sexps
+rewrite_prop (NotInSet sexp sexps) env = do
+    sexp  <- instantiate sexp env
+    sexps <- instantiates sexps env
+    return $ NotInSet sexp sexps
+
+freesets :: [Sequent.Exp] -> [Sequent.Exp]
+freesets seqs = foldl (++) [] $ map freeset seqs
+
+freeset :: Sequent.Exp -> [Sequent.Exp]
+freeset s = freeset' [] s
+
+freeset' :: [String] -> Sequent.Exp -> [Sequent.Exp]
+freeset' _     Sequent.Bottom          = []
+freeset' bound (Sequent.And     l r)   = (freeset' bound l) ++ (freeset' bound r)
+freeset' bound (Sequent.Or      l r)   = (freeset' bound l) ++ (freeset' bound r)
+freeset' bound (Sequent.Implies l r)   = (freeset' bound l) ++ (freeset' bound r)
+freeset' bound sym@(Sequent.Symbol  s) = if (elem s bound)
+                                           then []
+                                           else [sym]
+freeset' bound (Sequent.Forall  v e)   = freeset' (v:bound) e
+freeset' bound (Sequent.Exists  v e)   = freeset' (v:bound) e
+freeset' bound (Sequent.Subst   e _ _) = freeset' bound e
 
 apply_props :: [Prop] -> Either String ()
 apply_props [] = Right ()
@@ -61,9 +94,14 @@ apply_props (x:xs) = do
 
 apply_prop :: Prop -> Either String ()
 apply_prop p@(In _ _) = Left $ "System.Apply.apply_prop: error unexpected In '" ++ (show p) ++ "'."
+apply_prop p@(FreeIn _ _) = Left $ "System.Apply.apply_prop: error unexpected FreeIn '" ++ (show p) ++ "'."
+apply_prop p@(NotFreeIn _ _) = Left $ "System.Apply.apply_prop: error unexpected NotFreeIn '" ++ (show p) ++ "'."
 apply_prop p@(InSet l r) = if (elem l r)
                             then Right ()
                             else Left $ "Proposition failed: '" ++ (show p) ++ "'."
+apply_prop p@(NotInSet l r) = if (elem l r)
+                               then Left $ "Proposition failed: '" ++ (show p) ++ "'."
+                               else Right ()
 
 rewrite :: Rule -> Env.Env -> Either String [Sequent.Sequent]
 rewrite Rule{body=body} env = rewrite_body body env
@@ -136,6 +174,27 @@ instantiate (Sequent.Symbol s) env = do
     val <- Env.get env s
     val <- expect_single val
     return val
+instantiate (Sequent.Forall v e) env = do
+    -- remove bound variable from env
+    env <- return $ Env.remove_if_exists env v
+    -- then add bound variable back in with itself as value
+    -- this is needed so that we can successfully instantiate it as a noop
+    env <- Env.insert env v [Sequent.Symbol v]
+    e   <- instantiate e env
+    return $ Sequent.Forall v e
+instantiate (Sequent.Exists v e) env = do
+    -- remove bound variable from env
+    env <- return $ Env.remove_if_exists env v
+    -- then add bound variable back in with itself as value
+    -- this is needed so that we can successfully instantiate it as a noop
+    env <- Env.insert env v [Sequent.Symbol v]
+    e   <- instantiate e env
+    return $ Sequent.Exists v e
+-- TODO not entirely sure if this is correct
+instantiate (Sequent.Subst e1 e2 v) env = do
+    e1  <- instantiate e1 env
+    e2  <- instantiate e2 env
+    return $ Sequent.Subst e1 e2 v
 
 expect_single :: [Sequent.Exp] -> Either String Sequent.Exp
 expect_single []     = Left "System.Apply.expect_single: empty found"
@@ -176,6 +235,12 @@ destruct_arg (Sequent.Implies bl br) (Sequent.Implies al ar) = do
     right <- destruct_arg br ar
     env   <-  Env.merge left right
     return env
+destruct_arg (Sequent.Forall _ _)  _ =
+    Left "unable to destructor forall argument"
+destruct_arg (Sequent.Exists _ _)  _ =
+    Left "unable to destructor exists argument"
+destruct_arg (Sequent.Subst _ _ _) _ =
+    Left "unable to destructor substitute argument"
 destruct_arg (Sequent.Symbol name) arg = do
     return $ Env.Env name [arg] Env.EnvEmpty
 destruct_arg Sequent.Bottom _ = Left "Apply error: bottom encountered as binding"

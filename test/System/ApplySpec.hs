@@ -27,6 +27,20 @@ spec = do
       let expected = Right $ Env "L" [Symbol "a"] $ Env "R" [Symbol "b"] EnvEmpty
       destruct_sequent sequent rule `shouldBe` expected
 
+  describe "freeset" $ do
+    it "binary operators" $ do
+      let sequent  = And (Symbol "a") (Or (Symbol "b") (Symbol "c"))
+      let expected = [Symbol "a", Symbol "b", Symbol "c"]
+      freeset sequent `shouldBe` expected
+    it "forall binding" $ do
+      let sequent  = Forall "a" $ And (Symbol "a") (Or (Symbol "b") (Symbol "c"))
+      let expected = [Symbol "b", Symbol "c"]
+      freeset sequent `shouldBe` expected
+    it "exists binding" $ do
+      let sequent  = Exists "a" $ And (Symbol "a") (Or (Symbol "b") (Symbol "c"))
+      let expected = [Symbol "b", Symbol "c"]
+      freeset sequent `shouldBe` expected
+
   describe "destruct_arg" $ do
     it "destruct_arg and 1" $ do
       let binding  = And (Symbol "a") (Symbol "b")
@@ -149,12 +163,32 @@ spec = do
       let env = Env "a" [Symbol "1"] $ Env "b" [Symbol "2"] EnvEmpty
       let expected = Right $ And (Symbol "1") (Implies (Symbol "1") (Symbol "2"))
       instantiate sexp env `shouldBe` expected
+    it "instantiate forall" $ do
+      let sexp = Forall "x" (And (Symbol "x") (Symbol "y"))
+      let env = Env "x" [Symbol "1"] $ Env "y" [Symbol "2"] EnvEmpty
+      let expected = Right $ Forall "x" (And (Symbol "x") (Symbol "2"))
+      instantiate sexp env `shouldBe` expected
+    it "instantiate exists" $ do
+      let sexp = Exists "x" (And (Symbol "x") (Symbol "y"))
+      let env = Env "x" [Symbol "1"] $ Env "y" [Symbol "2"] EnvEmpty
+      let expected = Right $ Exists "x" (And (Symbol "x") (Symbol "2"))
+      instantiate sexp env `shouldBe` expected
 
   describe "rewrite_prop" $ do
-    it "rewrite_prop" $ do
+    it "In" $ do
       let prop = In (Symbol "a") "L"
       let env = Env "a" [Symbol "1"] $ Env "L" [Symbol "1"] EnvEmpty
       let expected = Right $ InSet (Symbol "1") [Symbol "1"]
+      rewrite_prop prop env `shouldBe` expected
+    it "FreeIn" $ do
+      let prop = FreeIn (Symbol "a") "L"
+      let env = Env "a" [Symbol "1"] $ Env "L" [Symbol "1"] EnvEmpty
+      let expected = Right $ InSet (Symbol "1") [Symbol "1"]
+      rewrite_prop prop env `shouldBe` expected
+    it "NotFreeIn" $ do
+      let prop = NotFreeIn (Symbol "a") "L"
+      let env = Env "a" [Symbol "1"] $ Env "L" [Symbol "1"] EnvEmpty
+      let expected = Right $ NotInSet (Symbol "1") [Symbol "1"]
       rewrite_prop prop env `shouldBe` expected
 
   describe "rewrite_props" $ do
@@ -168,16 +202,32 @@ spec = do
       rewrite_props props env `shouldBe` expected
 
   describe "apply_prop" $ do
-    it "apply_prop error 1" $ do
+    it "In failure" $ do
       let prop = In (Symbol "a") "L"
       let expected = Left "System.Apply.apply_prop: error unexpected In 'In a \"L\"'."
       apply_prop prop `shouldBe` expected
-    it "apply_prop error 2" $ do
+    it "FreeIn failure" $ do
+      let prop = FreeIn (Symbol "a") "L"
+      let expected = Left "System.Apply.apply_prop: error unexpected FreeIn 'FreeIn a \"L\"'."
+      apply_prop prop `shouldBe` expected
+    it "NotFreeIn failure" $ do
+      let prop = NotFreeIn (Symbol "a") "L"
+      let expected = Left "System.Apply.apply_prop: error unexpected NotFreeIn 'NotFreeIn a \"L\"'."
+      apply_prop prop `shouldBe` expected
+    it "InSet failure" $ do
       let prop = InSet (Symbol "1") [Symbol "2"]
       let expected = Left "Proposition failed: 'InSet 1 [2]'."
       apply_prop prop `shouldBe` expected
-    it "apply_prop" $ do
+    it "InSet success" $ do
       let prop = InSet (Symbol "1") [Symbol "1"]
+      let expected = Right ()
+      apply_prop prop `shouldBe` expected
+    it "NotInSet failure" $ do
+      let prop = NotInSet (Symbol "1") [Symbol "1"]
+      let expected = Left "Proposition failed: 'NotInSet 1 [1]'."
+      apply_prop prop `shouldBe` expected
+    it "NotInSet success" $ do
+      let prop = NotInSet (Symbol "1") [Symbol "2"]
       let expected = Right ()
       apply_prop prop `shouldBe` expected
 

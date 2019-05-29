@@ -128,11 +128,17 @@ parse_props_body tokens = do
 parse_prop :: [Token] -> Either String ([Token], Prop)
 parse_prop tokens = do
     tokens <- consume_token LParen tokens
-    (tokens, left) <- Sequent.parse_exp tokens
-    tokens <- consume_symbol "in" tokens
+    (tokens, left)   <- Sequent.parse_exp tokens
+    (tokens, opname) <- parse_string tokens
+    cons             <- case opname of
+                        "in"        -> Right In
+                        "freein"    -> Right FreeIn
+                        "notfreein" -> Right NotFreeIn
+                        _           -> Left "failed to parse prop operator"
     (tokens, rname) <- parse_string tokens
-    tokens <- consume_token RParen tokens
-    return (tokens, In left rname)
+    tokens          <- consume_token RParen tokens
+    exp             <- return $ cons left rname
+    return (tokens, exp)
 
 parse_body :: [Token] -> Either String ([Token], Body)
 -- unit
