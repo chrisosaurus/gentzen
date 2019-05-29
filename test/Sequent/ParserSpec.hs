@@ -26,6 +26,18 @@ spec = do
       let expression = [Symbol "a", Or, Symbol "b", Turnstyle, Symbol "a", Comma, Symbol "b"]
       let expected = Right $ Sequent.Sequent [Sequent.Or (Sequent.Symbol "a") (Sequent.Symbol "b")] [Sequent.Symbol "a", Sequent.Symbol "b"]
       parse expression `shouldBe` expected
+    it "forall" $ do
+      let expression = [Turnstyle, Forall, Symbol "x", LParen, Symbol "x", Or, Symbol "y", RParen]
+      let expected = Right $ Sequent.Sequent [] [Sequent.Forall "x" (Sequent.Or (Sequent.Symbol "x") (Sequent.Symbol "y"))]
+      parse expression `shouldBe` expected
+    it "exists" $ do
+      let expression = [Turnstyle, Exists, Symbol "x", LParen, Symbol "x", Or, Symbol "y", RParen]
+      let expected = Right $ Sequent.Sequent [] [Sequent.Exists "x" (Sequent.Or (Sequent.Symbol "x") (Sequent.Symbol "y"))]
+      parse expression `shouldBe` expected
+    it "substitution" $ do
+      let expression = [Turnstyle, Symbol "A", LessThan, Symbol "x", ForwardSlash, Symbol "y", GreaterThan]
+      let expected = Right $ Sequent.Sequent [] [Sequent.Substitute (Sequent.Symbol "A") (Sequent.Symbol "x") "y"]
+      parse expression `shouldBe` expected
     it "implies" $ do
       let expression = [Symbol "a", Implies, Symbol "b", Comma, Symbol "a", Turnstyle, Symbol "b"]
       let expected = Right $ Sequent.Sequent [ Sequent.Implies (Sequent.Symbol "a") (Sequent.Symbol "b")

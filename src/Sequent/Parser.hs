@@ -50,7 +50,10 @@ parse_commalist toks = do
 
 parse_exp :: [Token] -> Either String ([Token], Sequent.Exp)
 parse_exp tokens = do
-    (tokens, exp) <- (parse_exp_binary tokens) <> (parse_single tokens)
+    (tokens, exp) <- (parse_quantifiers tokens)  <>
+                     (parse_substitution tokens) <>
+                     (parse_exp_binary tokens)   <>
+                     (parse_single tokens)
     return (tokens, exp)
 
 parse_exp_binary :: [Token] -> Either String ([Token], Sequent.Exp)
@@ -62,6 +65,32 @@ parse_exp_binary tokens = do
     cons               <- translate operator
     (tokens, right)    <- parse_single tokens
     exp                <- return $ cons left right
+    return (tokens, exp)
+
+parse_quantifiers :: [Token] -> Either String ([Token], Sequent.Exp)
+parse_quantifiers (quantifier:tokens) = do
+    cons          <- case quantifier of
+                       Forall -> Right Sequent.Forall
+                       Exists -> Right Sequent.Exists
+                       _      -> Left "no quantifier found"
+    (tokens, var) <- parse_string tokens
+    (tokens, exp) <- parse_single tokens
+    exp           <- return $ cons var exp
+    return (tokens, exp)
+parse_quantifiers [] = Left "parse_quantifiers: empty list found"
+
+-- A<t/x> or haystack<replacement/needle>
+-- search through haystack, replacing every instance of needle with repalcement
+parse_substitution :: [Token] -> Either String ([Token], Sequent.Exp)
+parse_substitution tokens = do
+    (tokens, haystack)    <- parse_single tokens
+    tokens                <- consume_token LessThan tokens
+    -- TODO for now we allow replacement to be an arbitrary expression
+    (tokens, replacement) <- parse_single tokens
+    tokens                <- consume_token ForwardSlash tokens
+    (tokens, needle)      <- parse_string tokens
+    tokens                <- consume_token GreaterThan tokens
+    exp                   <- return $ Sequent.Substitute haystack replacement needle
     return (tokens, exp)
 
 parse_single :: [Token] -> Either String ([Token], Sequent.Exp)
