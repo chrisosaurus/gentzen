@@ -21,7 +21,7 @@ lexer string                 =
     where lexer_parts = [ lexer_bottom string
                         , lexer_forall string
                         , lexer_exists string
-                        , lexer_turnstyle string
+                        , lexer_turnstile string
                         , lexer_comma string
                         , lexer_implies string
                         , lexer_and string
@@ -61,10 +61,10 @@ lexer_exists ('e':'x':'i':'s':'t':'s':rest) = Just (Exists, rest)
 lexer_exists ('∃':rest) = Just (Exists, rest)
 lexer_exists _          = Nothing
 
-lexer_turnstyle :: String -> Maybe(Token, String)
-lexer_turnstyle ('|':'-':rest) = Just (Turnstyle, rest)
-lexer_turnstyle ('⊢':rest) = Just (Turnstyle, rest)
-lexer_turnstyle _          = Nothing
+lexer_turnstile :: String -> Maybe(Token, String)
+lexer_turnstile ('|':'-':rest) = Just (Turnstile, rest)
+lexer_turnstile ('⊢':rest) = Just (Turnstile, rest)
+lexer_turnstile _          = Nothing
 
 lexer_comma :: String -> Maybe(Token, String)
 lexer_comma (',':rest) = Just (Comma, rest)

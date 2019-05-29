@@ -28,14 +28,14 @@ parse_prefix :: [Token] -> Either String ([Token], Sequent.Sequent)
 parse_prefix [] = Left "No tokens, expected Sequent"
 parse_prefix toks = do
     (toks, lhs) <- parse_commalist toks
-    toks <- consume_token Turnstyle toks
+    toks <- consume_token Turnstile toks
     (toks, rhs) <- parse_commalist toks
     let seq = Sequent.Sequent lhs rhs
     return (toks, seq)
 
 parse_commalist :: [Token] -> Either String ([Token], [Sequent.Exp])
 parse_commalist [] = Right ([], [])
-parse_commalist all@(Turnstyle:_) = Right (all, [])
+parse_commalist all@(Turnstile:_) = Right (all, [])
 parse_commalist toks = do
     (toks, exp) <- parse_exp toks
     (toks, exps) <- (more toks) <> (end toks)

@@ -92,7 +92,7 @@ parse_sequent_arg :: [Token] -> Either String ([Token], String, String)
 parse_sequent_arg tokens = do
     tokens <- consume_token LParen tokens
     (tokens, lname) <- parse_string tokens
-    tokens <- consume_token Turnstyle tokens
+    tokens <- consume_token Turnstile tokens
     (tokens, rname) <- parse_string tokens
     tokens <- consume_token RParen tokens
     return (tokens, lname, rname)
@@ -154,7 +154,7 @@ parse_body tokens = do
 parse_sequ :: [Token] -> Either String ([Token], Sequ)
 parse_sequ tokens = do
     (tokens, lterm) <- parse_term tokens
-    tokens <- consume_token Turnstyle tokens
+    tokens <- consume_token Turnstile tokens
     (tokens, rterm) <- parse_term tokens
     return (tokens, Sequ lterm rterm)
 

@@ -26,7 +26,7 @@ spec = do
       let expression = [ Symbol "theorem", Symbol "silly-axiom"
                        , Symbol "system",  Symbol "G3ip"
                        , Symbol "sequent"
-                           , Symbol "a", Turnstyle, Symbol "a"
+                           , Symbol "a", Turnstile, Symbol "a"
                        , Symbol "proof"
                            , Symbol "apply", Symbol "axiom", LSquare, Symbol "a", RSquare
                        , Symbol "qed"
@@ -42,9 +42,9 @@ spec = do
       let expression = [ Symbol "theorem", Symbol "silly-axiom"
                        , Symbol "system",  Symbol "G3ip"
                        , Symbol "sequent"
-                           , Symbol "a", Turnstyle, Symbol "a"
+                           , Symbol "a", Turnstile, Symbol "a"
                        , Symbol "proof"
-                           , Symbol "expect", Symbol "a", Turnstyle, Symbol "a"
+                           , Symbol "expect", Symbol "a", Turnstile, Symbol "a"
                        , Symbol "qed"
                        ]
       let expected = Right $ Theorem { name    = "silly-axiom"
@@ -58,10 +58,10 @@ spec = do
       let expression = [ Symbol "theorem", Symbol "silly-axiom"
                        , Symbol "system",  Symbol "G3ip"
                        , Symbol "sequent"
-                           , Symbol "a", Turnstyle, Symbol "a"
+                           , Symbol "a", Turnstile, Symbol "a"
                        , Symbol "proof"
                            , Symbol "print"
-                           , Symbol "expect", Symbol "a", Turnstyle, Symbol "a"
+                           , Symbol "expect", Symbol "a", Turnstile, Symbol "a"
                            , Symbol "apply", Symbol "axiom",  LSquare, Symbol "a", RSquare
                            , LCurly, Symbol "print", Symbol "abort", RCurly
                            , LCurly, Symbol "abort", RCurly

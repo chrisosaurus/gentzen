@@ -51,8 +51,8 @@ spec = do
       let expression = []
       let expected = Right $ (expression, [])
       parse_exprs expression `shouldBe` expected
-    it "no expression turnstyle" $ do
-      let expression = [Turnstyle]
+    it "no expression turnstile" $ do
+      let expression = [Turnstile]
       let expected = Right $ (expression, [])
       parse_exprs expression `shouldBe` expected
     it "no expression garbage" $ do
@@ -83,7 +83,7 @@ spec = do
     it "axiom" $ do
       let expression = [ Symbol "axiom"
                        , LParen, Symbol "a", RParen
-                       , LParen, Symbol "L", Turnstyle, Symbol "R", RParen
+                       , LParen, Symbol "L", Turnstile, Symbol "R", RParen
                        , Equal
                        , LSquare
                          , LParen, Symbol "a", Symbol "in", Symbol "L", RParen
@@ -105,13 +105,13 @@ spec = do
     it "left_and" $ do
       let expression = [ Symbol "left_and"
                        , LParen, Symbol "a", And, Symbol "b", RParen
-                       , LParen, Symbol "L", Turnstyle, Symbol "R", RParen
+                       , LParen, Symbol "L", Turnstile, Symbol "R", RParen
                        , Equal
                        , Symbol "L"
                        , Minus, LParen, Symbol "a", And, Symbol "b", RParen
                        , Plus, Symbol "a"
                        , Plus, Symbol "b"
-                       , Turnstyle
+                       , Turnstile
                        , Symbol "R"
                        ]
       let lexp = Expr "L" [ Remove (Sequent.And (Sequent.Symbol "a") (Sequent.Symbol "b"))
@@ -130,15 +130,15 @@ spec = do
     it "right_and" $ do
       let expression = [ Symbol "right_and"
                        , LParen, Symbol "a", And, Symbol "b", RParen
-                       , LParen, Symbol "L", Turnstyle, Symbol "R", RParen
+                       , LParen, Symbol "L", Turnstile, Symbol "R", RParen
                        , Equal
                        , LParen
                          , Symbol "L", Plus, Symbol "a"
-                         , Turnstyle
+                         , Turnstile
                          , Symbol "R", Minus, LParen, Symbol "a", And, Symbol "b", RParen
                        , RParen, Comma, LParen
                          , Symbol "L", Plus, Symbol "b"
-                         , Turnstyle
+                         , Turnstile
                          , Symbol "R", Minus, LParen, Symbol "a", And, Symbol "b", RParen
                        , RParen
                        ]
@@ -159,7 +159,7 @@ spec = do
                        , Symbol "rules"
                        , Symbol "axiom"
                        , LParen, Symbol "a", RParen
-                       , LParen, Symbol "L", Turnstyle, Symbol "R", RParen
+                       , LParen, Symbol "L", Turnstile, Symbol "R", RParen
                        , Equal
                        , LSquare
                          , LParen, Symbol "a", Symbol "in", Symbol "L", RParen

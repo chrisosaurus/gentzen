@@ -41,13 +41,13 @@ spec = do
       let expression = "     "
       let expected = Right []
       lexer expression `shouldBe` expected
-    it "turnstyle" $ do
+    it "turnstile" $ do
       let expression = "|-"
-      let expected = Right [Turnstyle]
+      let expected = Right [Turnstile]
       lexer expression `shouldBe` expected
-    it "turnstyle ⊢" $ do
+    it "turnstile ⊢" $ do
       let expression = "⊢"
-      let expected = Right [Turnstyle]
+      let expected = Right [Turnstile]
       lexer expression `shouldBe` expected
     it "implies" $ do
       let expression = "->"
@@ -157,7 +157,7 @@ spec = do
       lexer expression `shouldBe` expected
     it "implication" $ do
       let expression = "a -> b, b -> c |- a -> b"
-      let expected = Right [Symbol "a", Implies, Symbol "b", Comma, Symbol "b", Implies, Symbol "c", Turnstyle, Symbol "a", Implies, Symbol "b"]
+      let expected = Right [Symbol "a", Implies, Symbol "b", Comma, Symbol "b", Implies, Symbol "c", Turnstile, Symbol "a", Implies, Symbol "b"]
       lexer expression `shouldBe` expected
     it "substitution syntax" $ do
       let expression = "(A<t/x>)"

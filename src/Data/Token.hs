@@ -4,7 +4,7 @@ module Data.Token
 )
 where
 
-data Token = Turnstyle
+data Token = Turnstile
            | Comma
            | Implies
            | And
@@ -29,7 +29,7 @@ data Token = Turnstyle
     deriving (Eq)
 
 stringify :: Token -> String
-stringify Turnstyle = "|-"
+stringify Turnstile = "|-"
 stringify Comma = ","
 stringify Implies = "->"
 stringify And = "^"
