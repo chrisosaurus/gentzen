@@ -36,6 +36,9 @@ lexer string                 =
                         , lexer_minus string
                         , lexer_period string
                         , lexer_equal string
+                        , lexer_lessthan string
+                        , lexer_greaterthan string
+                        , lexer_forwardslash string
                         , lexer_symbol string
                         ]
 
@@ -127,6 +130,19 @@ lexer_equal :: String -> Maybe(Token, String)
 lexer_equal ('=':rest) = Just (Equal, rest)
 lexer_equal _          = Nothing
 
+lexer_lessthan :: String -> Maybe(Token, String)
+lexer_lessthan ('<':rest) = Just (LessThan, rest)
+lexer_lessthan _          = Nothing
+
+lexer_greaterthan :: String -> Maybe(Token, String)
+lexer_greaterthan ('>':rest) = Just (GreaterThan, rest)
+lexer_greaterthan _          = Nothing
+
+lexer_forwardslash :: String -> Maybe(Token, String)
+lexer_forwardslash ('/':rest) = Just (ForwardSlash, rest)
+lexer_forwardslash _          = Nothing
+
+
 lexer_symbol :: String -> Maybe (Token, String)
 lexer_symbol string = lexer_symbol' string ""
 
@@ -160,5 +176,7 @@ should_break ':'             = True
 should_break '-'             = True
 should_break '\\'            = True
 should_break '/'             = True
+should_break '<'             = True
+should_break '>'             = True
 should_break _               = False
 

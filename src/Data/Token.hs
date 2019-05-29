@@ -23,6 +23,9 @@ data Token = Turnstyle
            | Minus
            | Period
            | Equal
+           | LessThan
+           | GreaterThan
+           | ForwardSlash
     deriving (Eq)
 
 stringify :: Token -> String
@@ -45,6 +48,9 @@ stringify Plus = "+"
 stringify Minus = "-"
 stringify Period = "."
 stringify Equal = "="
+stringify LessThan = "<"
+stringify GreaterThan = ">"
+stringify ForwardSlash = "/"
 
 instance Show Token where
   show token = stringify token

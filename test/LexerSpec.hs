@@ -125,6 +125,18 @@ spec = do
       let expression = "="
       let expected = Right [Equal]
       lexer expression `shouldBe` expected
+    it "less than" $ do
+      let expression = "<"
+      let expected = Right [LessThan]
+      lexer expression `shouldBe` expected
+    it "greater than" $ do
+      let expression = ">"
+      let expected = Right [GreaterThan]
+      lexer expression `shouldBe` expected
+    it "forward slash" $ do
+      let expression = "/"
+      let expected = Right [ForwardSlash]
+      lexer expression `shouldBe` expected
 
   describe "compound lexer tests" $ do
     it "simple and 1" $ do
@@ -146,6 +158,18 @@ spec = do
     it "implication" $ do
       let expression = "a -> b, b -> c |- a -> b"
       let expected = Right [Symbol "a", Implies, Symbol "b", Comma, Symbol "b", Implies, Symbol "c", Turnstyle, Symbol "a", Implies, Symbol "b"]
+      lexer expression `shouldBe` expected
+    it "substitution syntax" $ do
+      let expression = "(A<t/x>)"
+      let expected = Right [LParen, Symbol "A", LessThan, Symbol "t", ForwardSlash, Symbol "x", GreaterThan, RParen]
+      lexer expression `shouldBe` expected
+    it "forall syntax" $ do
+      let expression = "(∀x A)"
+      let expected = Right [LParen, Forall, Symbol "x", Symbol "A", RParen]
+      lexer expression `shouldBe` expected
+    it "exists syntax" $ do
+      let expression = "(∃x A)"
+      let expected = Right [LParen, Exists, Symbol "x", Symbol "A", RParen]
       lexer expression `shouldBe` expected
 
   describe "lexer error handling" $ do
