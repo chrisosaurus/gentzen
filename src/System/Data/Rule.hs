@@ -54,10 +54,14 @@ add_exps_rhs :: [Exp] -> Sequent -> Sequent
 add_exps_rhs exps (Sequent lhs rhs) = (Sequent lhs (exps ++ rhs))
 
 split_exp :: Exp -> Either String (Exp, Exp)
-split_exp (And     l r) = Right (l, r)
-split_exp (Or      l r) = Right (l, r)
-split_exp (Implies l r) = Right (l, r)
-split_exp (Symbol s)    = Left "Cannot split Symbol"
+split_exp (And     l r)   = Right (l, r)
+split_exp (Or      l r)   = Right (l, r)
+split_exp (Implies l r)   = Right (l, r)
+split_exp (Symbol s)      = Left "Cannot split Symbol"
+split_exp Bottom          = Left "Cannot split bottom"
+split_exp (Forall  _ _)   = Left "Cannot split forall"
+split_exp (Exists  _ _)   = Left "Cannot split exists"
+split_exp (Subst   _ _ _) = Left "Cannot split substitution"
 
 split_exp_lhs :: Exp -> Either String Exp
 split_exp_lhs exp = case (split_exp exp) of
