@@ -11,23 +11,23 @@ where
 import Data.Token
 
 consume_symbol :: String -> [Token] -> Either String [Token]
-consume_symbol exp (Symbol sym:rest) | exp == sym = Right rest
-consume_symbol exp _ = Left $ "Symbol not found: " ++ (show exp)
+consume_symbol expected (Symbol sym:rest) | expected == sym = Right rest
+consume_symbol expected _ = Left $ "Symbol not found: " ++ (show expected)
 
 consume_token :: Token -> [Token] -> Either String [Token]
-consume_token exp (tok:rest) | exp == tok = Right rest
-consume_token exp _ = Left $ "Token not found: " ++ (show exp)
+consume_token expected (tok:rest) | expected == tok = Right rest
+consume_token expected _ = Left $ "Token not found: " ++ (show expected)
 
 expect_token :: Token -> [Token] -> Either String [Token]
-expect_token exp tokens@(tok:_) | exp == tok = Right tokens
-expect_token exp _ = Left $ "Token not found: " ++ (show exp)
+expect_token expected tokens@(tok:_) | expected == tok = Right tokens
+expect_token expected _ = Left $ "Token not found: " ++ (show expected)
 
 expect_empty :: [Token] -> Either String [Token]
 expect_empty [] = Right []
-expect_empty rem = Left $ "Expected empty: " ++ (show rem)
+expect_empty tokens = Left $ "Expected empty: " ++ (show tokens)
 
 parse_string :: [Token] -> Either String ([Token], String)
 parse_string (Symbol s:rest) = Right (rest, s)
-parse_string rem = Left $ "Expected string: " ++ (show rem)
+parse_string tokens = Left $ "Expected string: " ++ (show tokens)
 
 
