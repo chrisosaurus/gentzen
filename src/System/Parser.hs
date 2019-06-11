@@ -80,13 +80,36 @@ parse_rule tokens = do
                          , body = body
                          })
 
+parse_args' :: [Token] -> Either String ([Token], [Sequent.Exp])
+-- parse_args' must consume at least one argument
+-- parse_args' is only called if either:
+--  we have consumed LParen and the next token is NOT RParen
+--  we are inside rule arguments and have just consumed a Comma
+parse_args' (RParen:_) = Left "expected rewrite rule argument"
+parse_args' tokens = do
+    (tokens, arg)  <- Sequent.parse_exp tokens
+    (tokens, args) <- (more tokens) <> (stop tokens)
+    return (tokens, arg:args)
+    where
+        -- stop if we find a closing left paren ')'
+        stop :: [Token] -> Either String ([Token], [Sequent.Exp])
+        stop tokens = do
+            tokens <- expect_token RParen tokens
+            return (tokens, [])
+        -- keep going if we find a comma ','
+        more :: [Token] -> Either String ([Token], [Sequent.Exp])
+        more tokens = do
+            tokens <- consume_token Comma tokens
+            (tokens, args) <- parse_args' tokens
+            return (tokens, args)
+
 parse_args :: [Token] -> Either String ([Token], [Sequent.Exp])
 parse_args (LParen:RParen:tokens) = Right (tokens, [])
 parse_args tokens = do
     tokens <- consume_token LParen tokens
-    (tokens, exp) <- Sequent.parse_exp tokens
+    (tokens, args) <- parse_args' tokens
     tokens <- consume_token RParen tokens
-    return (tokens, [exp])
+    return (tokens, args)
 
 parse_sequent_arg :: [Token] -> Either String ([Token], String, String)
 parse_sequent_arg tokens = do

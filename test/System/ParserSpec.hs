@@ -152,6 +152,25 @@ spec = do
                                        , body = Pair lexp rexp
                                        })
       parse_rule expression `shouldBe` expected
+    it "multiple arguments" $ do
+      let expression = [ Symbol "multiple"
+                       , LParen, Symbol "a", Comma, Symbol "b", Comma, Symbol "c", RParen
+                       , LParen, Symbol "L", Turnstile, Symbol "R", RParen
+                       , Equal
+                       , LParen, RParen
+                       ]
+      let expected_args = [ Sequent.Symbol "a"
+                          , Sequent.Symbol "b"
+                          , Sequent.Symbol "c"
+                          ]
+      let expected = Right $ ([], Rule { rule_name = "multiple"
+                                       , args = expected_args
+                                       , left_name = "L"
+                                       , right_name = "R"
+                                       , props = []
+                                       , body = Unit
+                                       })
+      parse_rule expression `shouldBe` expected
 
   describe "system parsing" $ do
     it "axiom system" $ do
