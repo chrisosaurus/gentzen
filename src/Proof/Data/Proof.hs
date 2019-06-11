@@ -48,7 +48,6 @@ instance Show Proof where
                , steps
                , unproven
                , aborted
-               , nextId
                } =   "\tunproven: "  ++ (show unproven)                           ++
                    "\n\taborted:  "  ++ (show (Set.toList aborted))               ++
                    "\n\tsequents:"   ++ (showSeqs  (Map.toList sequents))         ++
