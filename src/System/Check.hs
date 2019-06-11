@@ -92,18 +92,27 @@ extract_sequent_list_symbols :: [Exp] -> [String]
 extract_sequent_list_symbols exps = concat $ map extract_sequent_symbols exps
 
 extract_sequent_symbols :: Exp -> [String]
-extract_sequent_symbols Bottom        = []
-extract_sequent_symbols (Symbol s)    = [s]
-extract_sequent_symbols (And l r)     = (extract_sequent_symbols l) ++ (extract_sequent_symbols r)
-extract_sequent_symbols (Or l r)      = (extract_sequent_symbols l) ++ (extract_sequent_symbols r)
-extract_sequent_symbols (Implies l r) = (extract_sequent_symbols l) ++ (extract_sequent_symbols r)
+extract_sequent_symbols Bottom          = []
+extract_sequent_symbols (Symbol s)      = [s]
+extract_sequent_symbols (And l r)       = (extract_sequent_symbols l) ++ (extract_sequent_symbols r)
+extract_sequent_symbols (Or l r)        = (extract_sequent_symbols l) ++ (extract_sequent_symbols r)
+extract_sequent_symbols (Implies l r)   = (extract_sequent_symbols l) ++ (extract_sequent_symbols r)
+-- TODO how should we handle forall, exists, and subst?
+extract_sequent_symbols (Forall  q e)   = [q] ++ (extract_sequent_symbols e)
+extract_sequent_symbols (Exists  q e)   = [q] ++ (extract_sequent_symbols e)
+extract_sequent_symbols (Subst   a b c) = (extract_sequent_symbols a) ++ (extract_sequent_symbols b) ++ [c]
 
 extract_props_symbols :: [Prop] -> [String]
 extract_props_symbols [] = []
 extract_props_symbols (x:xs) = (extract_prop_symbols x) ++ (extract_props_symbols xs)
 
 extract_prop_symbols :: Prop -> [String]
-extract_prop_symbols (In l r) = (extract_sequent_symbols l) ++ [r]
+extract_prop_symbols (In l r)         = (extract_sequent_symbols l) ++ [r]
+extract_prop_symbols (FreeIn l r)     = (extract_sequent_symbols l) ++ [r]
+extract_prop_symbols (NotFreeIn l r)  = (extract_sequent_symbols l) ++ [r]
+-- TODO tidy these up...
+extract_prop_symbols (InSet l set)    = foldl (++) [] $ (extract_sequent_symbols l):(map extract_sequent_symbols set)
+extract_prop_symbols (NotInSet l set) = foldl (++) [] $ (extract_sequent_symbols l):(map extract_sequent_symbols set)
 
 extract_body_symbols :: Body -> [String]
 extract_body_symbols Unit = []
