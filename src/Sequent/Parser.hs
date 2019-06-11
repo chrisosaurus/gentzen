@@ -80,7 +80,7 @@ parse_quantifiers (quantifier:tokens) = do
 parse_quantifiers [] = Left "parse_quantifiers: empty list found"
 
 -- A<t/x> or haystack<replacement/needle>
--- search through haystack, replacing every instance of needle with repalcement
+-- search through haystack, replacing every instance of needle with replacement
 parse_substitution :: [Token] -> Either String ([Token], Sequent.Exp)
 parse_substitution tokens = do
     (tokens, haystack)    <- parse_single tokens
