@@ -4,14 +4,15 @@
 ## Purpose
 
 Gentzen is an attempt at writing a proof checker and basic assistant for
-performing proofs within arbitrary systems of Sequent Calculi.
+performing proofs within arbitrary first and second order systems of Sequent
+Calculi with shared contexts.
 
 I made Gentzen after reading parts of
 "Structural Proof Theory" (Negri, Von Plato),
 my goal was to better understand how the different systems relate as well as to
 have a machine check my proofs.
 
-Gentzen supports arbitrary user-defined sequent calculi.
+Gentzen supports user-defined systems of sequent calculi.
 
 Gentzen is still very early in development and is missing most features that
 might make it useful to anyone else.
