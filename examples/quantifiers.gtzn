@@ -1,0 +1,43 @@
+-- TODO add support for predicates.
+system G3i
+rules
+    axiom         (a)     (L |- R) = [(a in L), (a in R)].()
+    left_and      (a^b)   (L |- R) = L-(a^b)+a+b |- R
+    right_and     (a^b)   (L |- R) = (L+a |- R-(a^b)), (L+b |- R-(a^b))
+    left_or       (a∨b)   (L |- R) = (L-(a∨b)+a |- R), (L-(a∨b)+b |- R)
+    right_or1     (a∨b)   (L |- R) = L |- R-(a∨b)+a
+    right_or2     (a∨b)   (L |- R) = L |- R-(a∨b)+b
+    left_implies  (a->b)  (L |- R) = (L |- a), (L-(a->b)+b |- R)
+    right_implies (a->b)  (L |- R) = L+a |- R-(a->b)+b
+    left_bottom   ()      (L |- R) = [(_ in L)].()
+    left_forall   (A,t,x) (L |- R) = L-(∀x A)+(A<t/x>) |- R
+    right_forall  (A,y,x) (L |- R) = [(y notfreein L)].L |- R-(∀x A)+(A<y/x>)
+    left_exists   (A,y,x) (L |- R) = [(y notfreein L), (y notfreein R)].L-(∃x A)+(A<y/x>) |- R
+    right_exists  (A,t,x) (L |- R) = L |- R-(∃x A)+(A<t/x>)
+qed
+
+
+-- Not quite right as we currently lack predicates, but as close as I can get
+-- for now.
+theorem hypothetical_syllogism
+system G3i
+sequent (∀x (A -> B)) |- (∃x A) -> B
+proof
+    expect (∀x (A -> B)) |- (∃x A) -> B
+    apply right_implies [(∃x A) -> B]
+    expect (∃x A), (∀x (A -> B)) |- B
+    apply left_exists [A,x0,x]
+    expect A, (∀x (A -> B)) |- B
+    apply left_forall [(A -> B),x0,x]
+    expect (A->B), A |- B
+    apply left_implies [A->B]
+    {
+        expect (A->B), A |- A
+        apply axiom [A]
+    }
+    {
+        expect B, A |- B
+        apply axiom [B]
+    }
+qed
+
