@@ -190,11 +190,17 @@ instantiate (Sequent.Exists v e) env = do
     env <- Env.insert env v [Sequent.Symbol v]
     e   <- instantiate e env
     return $ Sequent.Exists v e
--- TODO not entirely sure if this is correct
+-- new plan:
+-- e1<e2/v> (Subst e1 e2 v)
+-- walk through `e1` replacing all `v` with `e2`
+-- this means bind `v` to `e2` in env and instantiate `e1`
 instantiate (Sequent.Subst e1 e2 v) env = do
-    e1  <- instantiate e1 env
-    e2  <- instantiate e2 env
-    return $ Sequent.Subst e1 e2 v
+    -- remove any existing `v`
+    env <- return $ Env.remove_if_exists env v
+    -- replace every `v` in `e1` with `e2`
+    env <- Env.insert env v [e2]
+    e   <- instantiate e1 env
+    return e
 
 expect_single :: [Sequent.Exp] -> Either String Sequent.Exp
 expect_single []     = Left "System.Apply.expect_single: empty found"
